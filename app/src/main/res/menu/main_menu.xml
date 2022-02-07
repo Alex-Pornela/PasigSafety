@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="@string/home"
+            android:icon="@drawable/menu_dashboard_icon"/>
+        <item
+            android:id="@+id/nav_crime_spot"
+            android:title="@string/crime_spot"
+            android:icon="@drawable/crime_spot_icon"/>
+        <item
+            android:id="@+id/nav_police"
+            android:title="@string/police_contact"
+            android:icon="@drawable/police_icon"/>
+        <item
+            android:id="@+id/nav_admin"
+            android:title="ADMIN"
+            android:icon="@drawable/admin_icon"/>
+    </group>
+
+    <item android:title="Profile">
+        <menu>
+
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_profile"
+                    android:title="@string/profile"
+                    android:icon="@drawable/menu_dashboard_icon"/>
+                <item
+                    android:id="@+id/change_password"
+                    android:title="@string/change_password"
+                    android:icon="@drawable/change_password_menu"/>
+                <item
+                    android:id="@+id/logout"
+                    android:title="@string/logout"
+                    android:icon="@drawable/logout_icon"/>
+            </group>
+
+        </menu>
+
+    </item>
+
+    <item android:title="OTHER">
+        <menu>
+
+            <group android:checkableBehavior="none">
+                <item
+                    android:id="@+id/help"
+                    android:title="@string/help"
+                    android:icon="@drawable/help_icon"/>
+                <item
+                    android:id="@+id/about"
+                    android:title="@string/about"
+                    android:icon="@drawable/about_icon"/>
+            </group>
+
+        </menu>
+
+    </item>
+
+</menu>

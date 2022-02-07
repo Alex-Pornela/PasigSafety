@@ -1,0 +1,102 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    compileSdk 31
+
+    defaultConfig {
+        applicationId "com.capstone.pasigsafety"
+        minSdk 22
+        targetSdk 31
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies{
+    def fragment_version = "1.4.1"
+
+    // Java language implementation
+    implementation "androidx.fragment:fragment:$fragment_version"
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
+
+    //Firebase
+    implementation 'com.google.firebase:firebase-database:20.0.3'
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation platform('com.google.firebase:firebase-bom:29.0.4')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.gms:google-services:4.3.10'
+    implementation 'androidx.browser:browser:1.4.0'
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta04'
+
+
+    //Lottie Animation
+    implementation 'com.airbnb.android:lottie:3.7.0'
+
+    //liquid swipe
+    implementation 'com.cuberto:liquid-swipe:1.0.0'
+
+    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
+
+    //noinspection GradleCompatible
+    implementation 'com.android.support:design:29.0.0'
+
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+
+    //country phone picker
+    implementation 'com.hbb20:ccp:2.3.1'
+
+    //otp pin view design
+    implementation 'com.chaos.view:pinview:1.4.3'
+
+    //Dexter is an Android library that simplifies the process of requesting permissions at runtime.
+    implementation 'com.karumi:dexter:6.2.3'
+
+    // Navigation Component
+    implementation "androidx.navigation:navigation-fragment:2.4.0"
+    implementation "androidx.navigation:navigation-ui:2.4.0"
+
+    //google maps
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.libraries.places:places:2.5.0'
+    implementation 'com.google.maps.android:android-maps-utils:2.2.0'
+    implementation 'com.google.maps:google-maps-services:0.2.9'
+    implementation 'org.slf4j:slf4j-simple:1.7.25'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+
+
+
+}

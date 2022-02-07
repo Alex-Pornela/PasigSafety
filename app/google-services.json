@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "120500896835",
+    "firebase_url": "https://pasig-safety-default-rtdb.firebaseio.com",
+    "project_id": "pasig-safety",
+    "storage_bucket": "pasig-safety.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120500896835:android:70a95f86b3e1692fe6c0f6",
+        "android_client_info": {
+          "package_name": "com.capstone.pasigsafety"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120500896835-6qf789c61n941a7bebpaep2kge8crb2g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.capstone.pasigsafety",
+            "certificate_hash": "928e42d4be31a359834b786aa4c725ddaf705879"
+          }
+        },
+        {
+          "client_id": "120500896835-uijc17k26ci0b5phschd0c8p6r0erofk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6E6oQSWBuJsKpK6JIIOZBsHgFultHDX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120500896835-uijc17k26ci0b5phschd0c8p6r0erofk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

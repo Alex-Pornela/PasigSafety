@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name">Pasig Safety</string>
+    <string name="logo_name">Pasig Safety</string>
+    <string name="powered_by">Powered by Pasig City</string>
+
+    <!--Strings for Onboarding Screen -->
+
+    <!--Title-->
+    <string name="first_slide_title">Pasig Safety</string>
+    <string name="second_slide_title">Crime Spot</string>
+    <string name="third_slide_title">Police Station</string>
+
+
+    <!--Description-->
+    <string name="first_slide_description">A Crime Evaluator application used to analyze, map and visualize crime incidents.</string>
+    <string name="second_slide_description">Easily locate and identify crime on the map!</string>
+    <string name="third_slide_description">You may contact the police if you have any information about the crime.</string>
+
+    <!--Buttons-->
+    <string name="skip_btn">Skip</string>
+    <string name="next_btn">Next</string>
+    <string name="get_started">Lets Get Started</string>
+
+    <!--StartUp-->
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="startup_heading">Pasig Safety</string>
+    <string name="startup_tagline">We care about your Safety</string>
+
+    //login
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="forget_password">Forget Password</string>
+    <string name="create_account">Create Account</string>
+
+    //signup
+    <string name="transition_login">Login</string>
+    <string name="full_name">Full Name</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="next">NEXT</string>
+    <string name="choose_gender">Choose Gender</string>
+    <string name="select_your_age">Birthday</string>
+
+    //OTP
+    <string name="otp_code_text">Co\nde</string>
+    <string name="otp_verification_text">Verification</string>
+    <string name="otp_description_text">Enter one time password sent on\n+639123456789</string>
+    <string name="otp_verify_code">Verify Code</string>
+
+    //forget password
+    <string name="forget_password_detail">Provide your account\'s phone number for which you want to reset your password </string>
+    <string name="enter_email">Email</string>
+    <string name="make_selection_detail">Select which contact detail should we use to reset your password?</string>
+    <string name="make_selection">Make Selection</string>
+    <string name="via_sms">via sms:</string>
+    <string name="via_mail">via mail:</string>
+    <string name="new_credentials">New \nCredentials</string>
+    <string name="new_credentials_detail">Your identity has been verified!\nSet your new password</string>
+    <string name="password_updated">Password \nUpdated</string>
+    <string name="password_updated_message">Your password has been updated!</string>
+
+
+    <string name="pasig_safety">Powered By: Pasig City</string>
+
+    //menu for navigation drawer
+    <string name="home">HOME</string>
+    <string name="crime_spot">CRIME SPOT</string>
+    <string name="police_contact">POLICE CONTACT</string>
+    <string name="profile">PROFILE</string>
+    <string name="change_password">CHANGE PASSWORD</string>
+    <string name="logout">LOGOUT</string>
+    <string name="help">HELP</string>
+    <string name="about">ABOUT</string>
+    <string name="open_navigation_drawer">Open Drawer</string>
+    <string name="close_navigation_drawer">Close Drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_place">Search Place</string>
+
+
+</resources>

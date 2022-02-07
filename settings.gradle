@@ -1,0 +1,3 @@
+
+rootProject.name = "Pasig Safety"
+include ':app'
