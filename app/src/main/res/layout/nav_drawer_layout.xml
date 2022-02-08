@@ -11,6 +11,14 @@
         android:id="@+id/dashboard_activity"
         layout="@layout/activity_dashboard" />
 
+
+
+
+
+
+
+
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="match_parent"

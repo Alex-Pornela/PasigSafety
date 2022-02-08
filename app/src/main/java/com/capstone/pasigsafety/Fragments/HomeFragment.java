@@ -4,12 +4,15 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -17,22 +20,33 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.viewbinding.ViewBinding;
 
 import android.os.Looper;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.Permission.AppPermissions;
 import com.capstone.pasigsafety.R;
+import com.capstone.pasigsafety.databinding.ActivityDashboardBinding;
 import com.capstone.pasigsafety.databinding.FragmentHomeBinding;
+import com.capstone.pasigsafety.databinding.NavDrawerLayoutBinding;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -58,6 +72,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.maps.model.AutocompletePrediction;
 import com.karumi.dexter.Dexter;
@@ -66,6 +81,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,11 +102,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private Marker currentMarker;
 
 
+
+
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //inflate the layout
+
         binding = FragmentHomeBinding.inflate( inflater, container, false );
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient( getActivity() );
@@ -98,7 +120,37 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         placesClient = Places.createClient( requireContext() );
         AutocompleteSessionToken.newInstance();
 
+        //check first runtime permission
         checkPermission();
+
+
+        binding.searchBar.setOnSearchActionListener( new MaterialSearchBar.OnSearchActionListener() {
+            @Override
+            public void onSearchStateChanged(boolean enabled) {
+
+            }
+
+            @Override
+            public void onSearchConfirmed(CharSequence text) {
+
+            }
+
+            @Override
+            public void onButtonClicked(int buttonCode) {
+
+                if (buttonCode == MaterialSearchBar.BUTTON_NAVIGATION) {
+
+
+
+                }
+            }
+
+
+        });
+
+
+
+
 
         //Map type with pop-up menu
         binding.btnMapType.setOnClickListener( view -> {
@@ -149,18 +201,60 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return binding.getRoot();
 
 
+
     }
+
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated( view, savedInstanceState );
+
 
         //sync map in layout
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById( R.id.homeMap );
         assert mapFragment != null;
         mapFragment.getMapAsync( this );
 
+
+
+
+
+
     }
+
+
+/*
+    private void animateDrawer() {
+        //add color
+        binding.drawer.setScrimColor( Color.TRANSPARENT );
+
+        //Add any color or remove it to use the default one!
+        //To make it transparent use Color.Transparent in side setScrimColor();
+        //drawerLayout.setScrimColor(Color.TRANSPARENT);
+        binding.drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                // Scale the View based on current slide offset
+                final float diffScaledOffset = slideOffset * (1 - END_SCALE);
+                final float offsetScale = 1 - diffScaledOffset;
+                binding.contentView.setScaleX(offsetScale);
+                binding.contentView.setScaleY(offsetScale);
+
+                // Translate the View, accounting for the scaled width
+                final float xOffset = drawerView.getWidth() * slideOffset;
+                final float xOffsetDiff = binding.contentView.getWidth() * diffScaledOffset / 2;
+                final float xTranslation = xOffset - xOffsetDiff;
+                binding.contentView.setTranslationX(xTranslation);
+            }
+        });
+    }
+
+ */
+
+
 
 
     //calling map
@@ -175,9 +269,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         mGoogleMap.setMyLocationEnabled( true );
         mGoogleMap.getUiSettings().setTiltGesturesEnabled( true );
 
+
+
     }
 
-    //Check runtime permission using dexter library
+    //Check location runtime permission using dexter library
     private void checkPermission() {
         Dexter.withContext( requireContext() ).withPermission( Manifest.permission.ACCESS_FINE_LOCATION ).withListener( new PermissionListener() {
             @Override
@@ -185,15 +281,34 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                 Toast.makeText( requireContext(), "Permission Granted", Toast.LENGTH_SHORT ).show();
             }
+
+            //when user denied the permission go to settings to allow
             @Override
             public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                Intent intent = new Intent();
-                intent.setAction( Settings.ACTION_APPLICATION_DETAILS_SETTINGS );
-                Uri uri = Uri.fromParts( "package", Objects.requireNonNull( getActivity() ).getPackageName(), "" );
-                intent.setData( uri );
-                startActivity( intent );
+                if(permissionDeniedResponse.isPermanentlyDenied()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
+                    builder.setTitle( "Permission Denied" )
+                            .setMessage( "Permission to access access device location is permanently denied. You need to go to setting to allow the permission" )
+                            .setNegativeButton( "Cancel", null )
+                            .setPositiveButton( "OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent();
+                                    intent.setAction( Settings.ACTION_APPLICATION_DETAILS_SETTINGS );
+                                    Uri uri = Uri.fromParts( "package", Objects.requireNonNull( getActivity() ).getPackageName(), "" );
+                                    intent.setData( uri );
+                                    startActivity( intent );
+                                }
+                            } )
+                            .show();
+                }else{
+                    Toast.makeText(requireContext() , "Permission Denied", Toast.LENGTH_SHORT ).show();
+                }
             }
 
+
+
+            //continue asking permission if it is denied
             @Override
             public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
 
@@ -243,6 +358,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         } );
     }
+
+
 
 
     @SuppressWarnings("deprecation")

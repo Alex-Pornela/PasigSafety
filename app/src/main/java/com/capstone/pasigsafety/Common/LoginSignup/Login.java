@@ -21,6 +21,7 @@ import com.capstone.pasigsafety.Activity.Dashboard;
 import com.capstone.pasigsafety.Databases.CheckInternet;
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.R;
+import com.capstone.pasigsafety.User.UserDashboard;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -144,7 +145,7 @@ public class Login extends AppCompatActivity {
                         SessionManager sessionManager = new SessionManager( Login.this, SessionManager.SESSION_USERSESSION );
                         sessionManager.createLoginSession( _fullname, _username, _email,_phoneNo, _password, _dateOfBirth, _gender );
 
-                        startActivity( new Intent( getApplicationContext(), Dashboard.class ) );
+                        startActivity( new Intent( getApplicationContext(), UserDashboard.class ) );
                         finish();
 
                         /*

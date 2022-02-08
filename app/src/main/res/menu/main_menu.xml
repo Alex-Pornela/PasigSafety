@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        tools:ignore="ExtraText">
         <item
             android:id="@+id/nav_home"
             android:title="@string/home"
@@ -9,7 +11,8 @@
         <item
             android:id="@+id/nav_crime_spot"
             android:title="@string/crime_spot"
-            android:icon="@drawable/crime_spot_icon"/>
+            android:icon="@drawable/crime_spot_icon"
+            tools:layout="@layout/fragment_crime_spot"/>
         <item
             android:id="@+id/nav_police"
             android:title="@string/police_contact"

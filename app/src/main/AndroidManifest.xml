@@ -4,10 +4,11 @@
     package="com.capstone.pasigsafety">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
@@ -36,8 +37,7 @@
         <activity
             android:name=".Activity.Dashboard"
             android:exported="false"
-            android:noHistory="true"/>
-
+            android:noHistory="true" />
         <activity
             android:name=".Common.LoginSignup.ForgetPasswordSuccessMessage"
             android:exported="false" />

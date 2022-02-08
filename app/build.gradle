@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.capstone.pasigsafety"
-        minSdk 22
+        minSdk 23
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -96,6 +96,13 @@ dependencies{
     implementation 'com.google.maps:google-maps-services:0.2.9'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
+
+    //material search bar
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
+
+    //Chip Navigation
+    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.30'
 
 
 

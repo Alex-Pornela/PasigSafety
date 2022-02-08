@@ -72,7 +72,7 @@ public class IntroScreen extends AppCompatActivity {
                     finish();
                 } else {
                     if (sessionManager.checkLogin()) {
-                        Intent intent = new Intent( IntroScreen.this, Dashboard.class );
+                        Intent intent = new Intent( IntroScreen.this, UserDashboard.class );
                         startActivity( intent );
                         finish();
 
