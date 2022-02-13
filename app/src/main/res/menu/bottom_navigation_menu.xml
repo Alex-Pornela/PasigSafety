@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/bottom_nav_dashboard"
+        android:title="Dashboard"
+        app:cnb_textColor="@color/black"
+        app:cnb_iconColor="@color/black"
+        android:icon="@drawable/menu_dashboard_icon"
+        app:cnb_backgroundColor="@color/yellow"/>
+
+    <item
+        android:id="@+id/bottom_nav_crime_spot"
+        android:title="Crime Spot"
+        app:cnb_textColor="@color/black"
+        android:icon="@drawable/crime_spot_icon"
+        app:cnb_iconColor="@color/black"
+        app:cnb_backgroundColor="@color/yellow"/>
+
+    <item
+        android:id="@+id/bottom_nav_police_contact"
+        android:title="Police Contact"
+        app:cnb_textColor="@color/black"
+        android:icon="@drawable/police_icon"
+        app:cnb_iconColor="@color/black"
+        app:cnb_backgroundColor="@color/yellow"/>
+
+    <item
+        android:id="@+id/bottom_nav_profile"
+        android:title="Profile"
+        app:cnb_textColor="@color/black"
+        app:cnb_iconColor="@color/black"
+        android:icon="@drawable/bottom_nav_profile_icon"
+        app:cnb_backgroundColor="@color/yellow"/>
+
+
+
+
+</menu>

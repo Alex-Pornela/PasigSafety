@@ -10,6 +10,8 @@
     <string name="second_slide_title">Crime Spot</string>
     <string name="third_slide_title">Police Station</string>
 
+    <string name="API_KEY">AIzaSyCLy0pBjCXHYXWYBzi3y8gRsp5TcJa2Mbo</string>
+
 
     <!--Description-->
     <string name="first_slide_description">A Crime Evaluator application used to analyze, map and visualize crime incidents.</string>
