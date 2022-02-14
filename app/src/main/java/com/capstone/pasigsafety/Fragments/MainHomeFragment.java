@@ -3,6 +3,8 @@ package com.capstone.pasigsafety.Fragments;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
+
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -33,6 +35,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -40,6 +43,7 @@ import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.R;
 import com.capstone.pasigsafety.databinding.FragmentHomeBinding;
 import com.capstone.pasigsafety.databinding.FragmentMainHomeBinding;
+import com.capstone.pasigsafety.databinding.FragmentPoliceContactBinding;
 import com.firebase.geofire.GeoFireUtils;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -51,6 +55,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -72,6 +77,8 @@ import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -105,15 +112,16 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
     private FragmentMainHomeBinding binding;
     private GoogleMap mGoogleMap;
+    private static final String TAG = "MainHomeFragment";
+    private int ACCESS_LOCATION_REQUEST_CODE = 10001;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    LocationRequest locationRequest;
+    private Marker userLocationMarker;
     private boolean  isTrafficEnable;
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallback;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private PlacesClient placesClient;
     private List<AutocompletePrediction> predictionList;
     private Location currentLocation;
     private FirebaseAuth firebaseAuth;
-    private Marker currentMarker;
 
 
 
@@ -126,18 +134,18 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         binding = FragmentMainHomeBinding.inflate( inflater, container, false );
 
 
+
         firebaseAuth = FirebaseAuth.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient( Objects.requireNonNull( getActivity() ) );
-        Places.initialize( requireContext(), "AIzaSyCLy0pBjCXHYXWYBzi3y8gRsp5TcJa2Mbo" );
+        Places.initialize( requireContext(), "AIzaSyCLy0pBjCXHYXWYBzi3y8gRsp5TcJa2Mbo");
         placesClient = Places.createClient( requireContext() );
         final AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient( requireContext() );
 
 
-        //check first runtime permission
+        checkGps();
 
-
-        CheckGps();
-
+        //search bar for places
         binding.searchBar.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,9 +160,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
                 startActivityForResult(intent, 100);
             }
         } );
-
-
-
 
         //Map type with pop-up menu
         binding.btnMapType.setOnClickListener( view -> {
@@ -199,77 +204,10 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         } );
 
         // user location button
-        binding.currentLocation.setOnClickListener( searchLocation -> CheckGps() );
-
-/*
-        binding.searchBar.setOnSearchActionListener( new MaterialSearchBar.OnSearchActionListener() {
-            @Override
-            public void onSearchStateChanged(boolean enabled) {
-
-            }
-
-            @Override
-            public void onSearchConfirmed(CharSequence text) {
-                startSearch(text.toString(), true, null, true);
-            }
-
-            @Override
-            public void onButtonClicked(int buttonCode) {
-
-            }
-        } );
-
-        binding.searchBar.addTextChangeListener( new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                FindAutocompletePredictionsRequest predictionsRequest = FindAutocompletePredictionsRequest.builder()
-                        .setCountry( "ph" )
-                        .setTypeFilter( TypeFilter.ADDRESS )
-                        .setSessionToken( token )
-                        .setQuery( s.toString() )
-                        .build();
-                placesClient.findAutocompletePredictions( predictionsRequest ).addOnCompleteListener( new OnCompleteListener<FindAutocompletePredictionsResponse>() {
-                    @Override
-                    public void onComplete(@NonNull Task<FindAutocompletePredictionsResponse> task) {
-                        if(task.isSuccessful()){
-                            FindAutocompletePredictionsResponse predictionsResponse = task.getResult();
-                            if (predictionsResponse != null){
-                                predictionList = predictionsResponse.getAutocompletePredictions();
-                                List<String> suggestionList = new ArrayList<>();
-                                for(int i=0;i<predictionList.size();i++){
-                                    AutocompletePrediction prediction = predictionList.get( i );
-                                    suggestionList.add( prediction.getFullText( null ).toString() );
-                                }
-                                binding.searchBar.updateLastSuggestions( suggestionList );
-                                if(binding.searchBar.isSuggestionsVisible()){
-                                    binding.searchBar.showSuggestionsList();
-                                }
-                            }
-                        }else{
-                            Log.i("mytag","prediction fetching task unsuccessful");
-                        }
-                    }
-                } );
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        } );
-
- */
-
+        binding.currentLocation.setOnClickListener( searchLocation -> checkGps() );
 
         return binding.getRoot();
     }
-
 
 
     @Override
@@ -282,102 +220,63 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         assert mapFragment != null;
         mapFragment.getMapAsync( this );
 
-
-
     }
 
-
-    //calling map
+    //Call Map
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        mGoogleMap = googleMap;
-        checkPermission();
 
-        try{
-            boolean success = mGoogleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle(getContext (),R.raw.maps_style));
-            if(!success)
-                Log.e(  "MAP ERROR",  "style parsing error");
-        }catch (Resources.NotFoundException e){
-            Log.e(  "MAP_ERROR",e.getMessage());
+        mGoogleMap = googleMap;
+
+        try {
+            boolean success = mGoogleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( getContext(), R.raw.maps_style ) );
+            if (!success)
+                Log.e( "MAP ERROR", "style parsing error" );
+        } catch (Resources.NotFoundException e) {
+            Log.e( "MAP_ERROR", e.getMessage() );
+        }
+
+        if (ContextCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.
+                PERMISSION_GRANTED) {
+            enableUserLocation();
+            //zoomToUserLocation();
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale( getActivity(), Manifest.permission.ACCESS_FINE_LOCATION )) {
+                //We can show user a dialog why this permission is necessary
+                ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE );
+            } else {
+                ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE );
+            }
         }
 
     }
 
-
-    //Check location runtime permission using dexter library
-    private void checkPermission() {
-        Dexter.withContext( requireContext() ).withPermission( Manifest.permission.ACCESS_FINE_LOCATION ).withListener( new PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-
-                if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-
-                //Toast.makeText( requireContext(), "Permission Granted", Toast.LENGTH_SHORT ).show();
-                mGoogleMap.setMyLocationEnabled( true );
-                mGoogleMap.getUiSettings().setTiltGesturesEnabled( true );
-                mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-                mGoogleMap.setOnMyLocationButtonClickListener( () -> {
-                    fusedLocationProviderClient.getLastLocation().addOnFailureListener( e -> Toast.makeText( getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT ).show() )
-                            .addOnSuccessListener( location -> {
-                                LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                                mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( userLocation,18f ) );
-
-                            } );
-                    return true;
-                } );
-
-
-            }
-
-            //when user denied the permission go to settings to allow
-            @Override
-            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                if(permissionDeniedResponse.isPermanentlyDenied()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
-                    builder.setTitle( "Permission Denied" )
-                            .setMessage( "Permission to access access device location is permanently denied. You need to go to setting to allow the permission" )
-                            .setNegativeButton( "Cancel", null )
-                            .setPositiveButton( "OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent();
-                                    intent.setAction( Settings.ACTION_APPLICATION_DETAILS_SETTINGS );
-                                    Uri uri = Uri.fromParts( "package", Objects.requireNonNull( getActivity() ).getPackageName(), "" );
-                                    intent.setData( uri );
-                                    startActivity( intent );
-                                }
-                            } )
-                            .show();
-                }else{
-                    Toast.makeText(requireContext() , "Permission Denied", Toast.LENGTH_SHORT ).show();
-                }
-            }
-
-
-
-            //continue asking permission if it is denied
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-
-                permissionToken.continuePermissionRequest();
-
-            }
-        } ).check();
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            getLastLocation();
+            checkSettingsAndStartLocationUpdates();
+        } else {
+            checkPermission();
+        }
     }
 
 
-    //checking the location and gps if enabled or not
-    private void CheckGps() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setSmallestDisplacement( 10f );
-        locationRequest.setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY );
-        locationRequest.setInterval( 5000 );
-        locationRequest.setFastestInterval( 3000 );
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopLocationUpdates();
+    }
 
+    private void checkGps() {
+        //LOCATION REQUEST
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval( 4000 );
+        locationRequest.setFastestInterval( 2000 );
+        locationRequest.setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY );
+
+        //Check if gps enabled or not
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest( locationRequest )
                 .setAlwaysShow( true );
@@ -391,7 +290,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
                 try {
                     LocationSettingsResponse response = task.getResult( ApiException.class );
-                    getDeviceLocation();
+                    zoomToUserLocation();
 
                 } catch (ApiException e) {
                     if (e.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
@@ -411,8 +310,184 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
         } );
     }
 
+    //Check location runtime permission using dexter library
+    private void checkPermission() {
+        Dexter.withContext( requireContext() ).withPermission( Manifest.permission.ACCESS_FINE_LOCATION ).withListener( new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                //Toast.makeText( requireContext(), "Permission Granted", Toast.LENGTH_SHORT ).show();
+
+                if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mGoogleMap.setMyLocationEnabled( true );
+                mGoogleMap.getUiSettings().setTiltGesturesEnabled( true );
+                mGoogleMap.getUiSettings().setMyLocationButtonEnabled( false );
+
+            }
+
+            //when user denied the permission go to settings to allow
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                if (permissionDeniedResponse.isPermanentlyDenied()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder( requireContext() );
+                    builder.setTitle( "Permission Denied" )
+                            .setMessage( "Permission to access access device location is permanently denied. You need to go to setting to allow the permission" )
+                            .setNegativeButton( "Cancel", null )
+                            .setPositiveButton( "OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent();
+                                    intent.setAction( Settings.ACTION_APPLICATION_DETAILS_SETTINGS );
+                                    Uri uri = Uri.fromParts( "package", Objects.requireNonNull( getActivity() ).getPackageName(), "" );
+                                    intent.setData( uri );
+                                    startActivity( intent );
+                                }
+                            } )
+                            .show();
+                } else {
+                    Toast.makeText( requireContext(), "Permission Denied", Toast.LENGTH_SHORT ).show();
+                }
+            }
 
 
+            //continue asking permission if it is denied
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+
+                permissionToken.continuePermissionRequest();
+
+            }
+        } ).check();
+    }
+
+    private void enableUserLocation() {
+        if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mGoogleMap.setMyLocationEnabled( true );
+        mGoogleMap.getUiSettings().setTiltGesturesEnabled( true );
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled( false );
+
+    }
+
+    private void zoomToUserLocation() {
+        if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Task<Location> locationTask = fusedLocationProviderClient.getLastLocation();
+        locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
+                HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
+
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position( latLng );
+                markerOptions.icon( bitmapDescriptorFromVector( getContext(),R.drawable.ic_round_location_on_24 ));
+                markerOptions.snippet( userDetails.get( SessionManager.KEY_FULLNAME ) );
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18f));
+
+                if (userLocationMarker != null) {
+                    userLocationMarker.remove();
+                }
+
+                userLocationMarker = mGoogleMap.addMarker( markerOptions );
+                userLocationMarker.setTag( 703 );
+            }
+        });
+    }
+
+    //location request call back
+    LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            Log.d(TAG, "onLocationResult: " + locationResult.getLastLocation());
+            if (mGoogleMap != null) {
+                setUserLocationMarker(locationResult.getLastLocation());
+            }
+        }
+    };
+
+    private void setUserLocationMarker(Location location) {
+
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
+        HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
+
+
+        if (userLocationMarker == null) {
+            //Create a new marker
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position( latLng );
+            markerOptions.icon( bitmapDescriptorFromVector( getContext(),R.drawable.ic_round_location_on_24 ));
+            markerOptions.snippet( userDetails.get( SessionManager.KEY_FULLNAME ) );
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18f));
+
+            if (userLocationMarker != null) {
+                userLocationMarker.remove();
+            }
+
+            userLocationMarker = mGoogleMap.addMarker( markerOptions );
+            userLocationMarker.setTag( 703 );
+        } else  {
+            //use the previously created marker
+            userLocationMarker.setPosition(latLng);
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18f));
+        }
+
+    }
+
+    private void checkSettingsAndStartLocationUpdates() {
+        LocationSettingsRequest request = new LocationSettingsRequest.Builder()
+                .addLocationRequest( locationRequest ).build();
+        SettingsClient client = LocationServices.getSettingsClient( requireContext() );
+
+        Task<LocationSettingsResponse> locationSettingsResponseTask = client.checkLocationSettings( request );
+        locationSettingsResponseTask.addOnSuccessListener( new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                //Settings of device are satisfied and we can start location updates
+                startLocationUpdates();
+            }
+        } );
+        locationSettingsResponseTask.addOnFailureListener( new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    ResolvableApiException apiException = (ResolvableApiException) e;
+                    try {
+                        apiException.startResolutionForResult( getActivity(), 1001 );
+                    } catch (IntentSender.SendIntentException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        } );
+    }
+
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates( locationRequest, locationCallback, Looper.getMainLooper() );
+    }
+
+    //stop location update
+    private void stopLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
+    //For handling gps location and on selected place in autocomplete search bar
     @SuppressWarnings("deprecation")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -420,109 +495,54 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
 
         if (requestCode == 101) {
             if (resultCode == RESULT_OK) {
-                getDeviceLocation();
+                zoomToUserLocation();
 
             }
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText( requireContext(), "Cancelled GPS", Toast.LENGTH_SHORT ).show();
             }
+            //For auto search place and also once place is selected
+
         } else if (requestCode == 100 & resultCode == RESULT_OK) {
             //Initialize place
             Place place = Autocomplete.getPlaceFromIntent(data);
+
+            Log.i("mytag", "Place found: " + place.getName());
+            LatLng latLngOfPlace = place.getLatLng();
+            if (latLngOfPlace != null) {
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( latLngOfPlace, 18f );
+
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position( latLngOfPlace )
+                        .title( place.getName() )
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+                if (userLocationMarker != null) {
+                    userLocationMarker.remove();
+                }
+
+                userLocationMarker = mGoogleMap.addMarker( markerOptions );
+                userLocationMarker.setTag( 703 );
+                mGoogleMap.animateCamera( cameraUpdate );
+
+            }
+            stopLocationUpdates();
         }
     }
 
-    private void getDeviceLocation() {
-        if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
+    //Handling user permission
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == ACCESS_LOCATION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                enableUserLocation();
+                zoomToUserLocation();
+            } else {
+                //We can show a dialog that permission is not granted...
+            }
         }
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener( new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-
-                        if (task.isSuccessful()) {
-                            currentLocation = task.getResult();
-                            if (currentLocation != null) {
-                                SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
-                                HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
-
-                                LatLng latLng = new LatLng( currentLocation.getLatitude(), currentLocation.getLongitude() );
-                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( latLng, 18f );
-
-                                MarkerOptions markerOptions = new MarkerOptions()
-                                        .position( latLng )
-                                        .title( "Current Location" )
-                                        .icon( bitmapDescriptorFromVector( getContext(),R.drawable.ic_round_location_on_24 ) )
-                                        .snippet( userDetails.get( SessionManager.KEY_FULLNAME ) );
-
-
-                                if (currentMarker != null) {
-                                    currentMarker.remove();
-                                }
-
-                                currentMarker = mGoogleMap.addMarker( markerOptions );
-                                currentMarker.setTag( 703 );
-                                mGoogleMap.animateCamera( cameraUpdate );
-
-                            } else {
-                                LocationRequest locationRequest = LocationRequest.create();
-                                locationRequest.setInterval( 10000 );
-                                locationRequest.setFastestInterval( 5000 );
-                                locationRequest.setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY );
-
-                                locationCallback = new LocationCallback() {
-                                    @Override
-                                    public void onLocationResult(@NonNull LocationResult locationResult) {
-                                        super.onLocationResult( locationResult );
-
-                                        SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
-                                        HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
-
-                                        if (locationResult == null) {
-                                            return;
-                                        }
-                                        currentLocation = locationResult.getLastLocation();
-
-                                        LatLng latLng = new LatLng( currentLocation.getLatitude(), currentLocation.getLongitude() );
-                                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( latLng, 18f );
-
-                                        MarkerOptions markerOptions = new MarkerOptions()
-                                                .position( latLng )
-                                                .title( "Current Location" )
-                                                .icon( bitmapDescriptorFromVector( getContext(),R.drawable.ic_round_location_on_24 ))
-                                                .snippet( userDetails.get( SessionManager.KEY_FULLNAME ) );
-
-
-                                        if (currentMarker != null) {
-                                            currentMarker.remove();
-                                        }
-
-                                        currentMarker = mGoogleMap.addMarker( markerOptions );
-                                        currentMarker.setTag( 703 );
-                                        mGoogleMap.animateCamera( cameraUpdate );
-
-                                        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-
-                                    }
-                                };
-                                if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
-                                        && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
-                                    return;
-                                }
-                                fusedLocationProviderClient.requestLocationUpdates( locationRequest, locationCallback, Looper.getMainLooper() );
-                            }
-                        }else{
-                            Toast.makeText( requireContext(), "Unable to get last location", Toast.LENGTH_SHORT ).show();
-                        }
-
-                    }
-                } );
     }
-
-
 
     //For Custom google map Marker
     private BitmapDescriptor bitmapDescriptorFromVector (Context context, int vectorResId) {
