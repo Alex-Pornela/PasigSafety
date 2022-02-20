@@ -13,4 +13,6 @@
         android:textStyle="bold"
         android:textSize="50dp"
         android:text="Admin Fragment" />
+
+
 </RelativeLayout>

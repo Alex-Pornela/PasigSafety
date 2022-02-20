@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -122,10 +123,12 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback {
     private List<AutocompletePrediction> predictionList;
     private Location currentLocation;
     private FirebaseAuth firebaseAuth;
+    LocationManager locationManager;
 
 
 
 
+    @SuppressLint("MissingPermission")
     @SuppressWarnings( "deprecation" )
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -7,6 +7,11 @@
     android:background="#6a5ae0"
     tools:context=".Fragments.UserSettings.ProfileFragment">
 
+    <Button
+        android:id="@+id/logBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

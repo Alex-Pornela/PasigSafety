@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         firebaseAuth = FirebaseAuth.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient( getActivity() );
-        Places.initialize( requireContext(), "AIzaSyCLy0pBjCXHYXWYBzi3y8gRsp5TcJa2Mbo" );
+        Places.initialize( requireContext(), "@string/API_KEY" );
         placesClient = Places.createClient( requireContext() );
         AutocompleteSessionToken.newInstance();
 

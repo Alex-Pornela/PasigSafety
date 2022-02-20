@@ -107,6 +107,15 @@ dependencies{
     // Add this to your app/build.gradle
     implementation 'com.firebase:geofire-android-common:3.1.0'
 
+    // Retrofit Library
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+
+    // Circular Indicator library
+    implementation 'com.victor:lib:1.0.4'
+
+
 
 
 }
