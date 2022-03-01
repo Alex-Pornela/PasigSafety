@@ -3,16 +3,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.CrimeSpotFragment">
 
+    <fragment
+        android:id="@+id/homeMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
-    <TextView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinate"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="120dp">
+
+
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            android:id="@+id/searchBar"
+            style="@style/MaterialSearchBarLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:elevation="5dp"
+            android:outlineProvider="bounds"
+            app:mt_hint="Search Place"
+            app:mt_maxSuggestionsCount="10"
+            app:mt_placeholder="Search Place"
+            app:mt_speechMode="false" />
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+
+    <HorizontalScrollView
+        android:id="@+id/placesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/coordinate"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/placesGroup"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleLine="true"
+            app:singleSelection="true" />
+
+    </HorizontalScrollView>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnMapType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textStyle="bold"
-        android:textSize="40dp"
-        android:text="Crime Spot Fragment" />
+        android:layout_below="@id/placesList"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/ic_map_type"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="40dp"
+        app:tint="@color/primaryColor" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/enableTraffic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnMapType"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_traffic"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="40dp"
+        app:tint="@color/primaryColor" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/currentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/enableTraffic"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/ic_my_location"
+        app:backgroundTint="@color/white"
+        app:fabCustomSize="40dp"
+        app:tint="@color/primaryColor" />
+
+
 
 </RelativeLayout>

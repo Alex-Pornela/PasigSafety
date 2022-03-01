@@ -100,6 +100,19 @@
         app:fabCustomSize="40dp"
         app:tint="@color/primaryColor" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/placeRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
 
 
 

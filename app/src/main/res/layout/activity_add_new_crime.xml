@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="26dp"
+    tools:context=".Admin.AddNewCrimeActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/crimeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/brandon_grotesque_black"
+            android:text="Crime Category"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/crimeCategory"
+            style="@style/Widget.AppCompat.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/crimeTitle"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/spinner_bg"
+            android:dropDownWidth="wrap_content"
+            android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+            android:popupElevation="3dp" />
+
+
+        <TextView
+            android:id="@+id/brgyTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/crimeCategory"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/brandon_grotesque_black"
+            android:text="Baranggay"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/brgy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/brgyTitle"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black"
+            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeColor="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/brgyName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:fontFamily="@font/muli_semibold"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@null" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/streetTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/brgy"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/brandon_grotesque_black"
+            android:text="Street"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/street"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/streetTitle"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black"
+            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeColor="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/streetName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:fontFamily="@font/muli_semibold"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@null" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+        <TextView
+            android:id="@+id/setDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/street"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/brandon_grotesque_black"
+            android:text="Date"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/setDate"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black"
+            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeColor="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/selectDate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:fontFamily="@font/muli_semibold"
+                android:textColor="@color/black"
+                android:focusable="false"
+                android:textCursorDrawable="@null" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+        <TextView
+            android:id="@+id/setTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/date"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/brandon_grotesque_black"
+            android:text="Time"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/setTime"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/black"
+            app:boxStrokeWidthFocused="2dp"
+            app:boxStrokeColor="@color/black">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/selectTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:fontFamily="@font/muli_semibold"
+                android:textColor="@color/black"
+                android:focusable="false"
+                android:textCursorDrawable="@null" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/save_new_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/time"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="Submit"
+            android:textAlignment="center" />
+
+    </RelativeLayout>
+
+</ScrollView>

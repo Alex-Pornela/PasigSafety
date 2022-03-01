@@ -99,6 +99,7 @@ public class SplashScreen extends AppCompatActivity {
 
     }
 
+    @SuppressWarnings( "deprecation" )
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
 

@@ -10,7 +10,9 @@
     <string name="second_slide_title">Crime Spot</string>
     <string name="third_slide_title">Police Station</string>
 
-    <string name="API_KEY">AIzaSyCLy0pBjCXHYXWYBzi3y8gRsp5TcJa2Mbo</string>
+    <!--Pasigsafety googleaccount <string name="API_KEY">AIzaSyCLy0pBjCXHYXWYBzi3y8gRsp5TcJa2Mbo</string>-->
+    <!--Marte gmail-->
+    <string name="API_KEY">AIzaSyAfbGP14EEyceB__hkg5zbOrv5m3iF9vbY</string>
 
 
     <!--Description-->
@@ -84,6 +86,44 @@
     <string name="search_place">Search Place</string>
 
 
+    <!--For Crime Type Array-->
+    <string-array name="crime_type">
+        <item>Robbery</item>
+        <item>Scam</item>
+        <item>Theft</item>
+        <item>Physical Injury</item>
+        <item>Gambling</item>
+        <item>CarNapping</item>
+    </string-array>
+
+    <!--For Crime Icon Item-->
+    <string-array name="crime_ic">
+        <item>ic_assalto</item>
+        <item>ic_moto</item>
+        <item>ic_carro</item>
+        <item>ic_sequestro</item>
+        <item>ic_flanelinha</item>
+        <item>ic_latrocinio</item>
+    </string-array>
+
+    <!--For Crime Description Item-->
+    <string-array name="crime_desc">
+        <item>Taking property from a person by force, threat of force, or fear, in public or private places</item>
+        <item>Robbery by motorcycle, bicycle or similar</item>
+        <item>Theft of a car, truck, motorcycle, or any motor vehicle</item>
+        <item>Hijacking in banks or similar</item>
+        <item>Action parking watchers in public lots (extortion)</item>
+        <item>Robbery-murder</item>
+
+    </string-array>
+
+    <!--For Crime Icon Item-->
+    <string-array name="barangay_select">
+        <item>Santolan</item>
+        <item>Dela Paz</item>
+        <item>Manggahan</item>
+
+    </string-array>
 
 
 </resources>

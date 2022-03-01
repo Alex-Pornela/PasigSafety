@@ -374,8 +374,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     private void CheckGps() {
         locationRequest = LocationRequest.create();
         locationRequest.setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY );
-        locationRequest.setInterval( 10000 );
-        locationRequest.setFastestInterval( 5000 );
+        locationRequest.setInterval( 5000 );
+        locationRequest.setFastestInterval( 2000 );
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest( locationRequest )
@@ -463,8 +463,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
                             } else {
                                 LocationRequest locationRequest = LocationRequest.create();
-                                locationRequest.setInterval( 10000 );
-                                locationRequest.setFastestInterval( 5000 );
+                                locationRequest.setInterval( 5000 );
+                                locationRequest.setFastestInterval( 2000 );
                                 locationRequest.setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY );
 
                                 locationCallback = new LocationCallback() {

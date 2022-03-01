@@ -25,6 +25,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.os.Looper;
 import android.provider.Settings;
@@ -35,6 +39,8 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.capstone.pasigsafety.Adapter.GooglePlaceAdapter;
+import com.capstone.pasigsafety.Adapter.InfoWindowAdapter;
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.GooglePlaceModel;
 import com.capstone.pasigsafety.Model.GoogleResponseModel;
@@ -44,6 +50,7 @@ import com.capstone.pasigsafety.Utility.PlaceModel;
 import com.capstone.pasigsafety.WebServices.RetrofitAPI;
 import com.capstone.pasigsafety.WebServices.RetrofitClient;
 import com.capstone.pasigsafety.databinding.FragmentPoliceContactBinding;
+import com.capstone.pasigsafety.databinding.InfoWindowLayoutBinding;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -98,7 +105,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class PoliceContactFragment extends Fragment implements OnMapReadyCallback {
+public class PoliceContactFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mGoogleMap;
     private static final String TAG = "PoliceContactFragment";
@@ -117,6 +124,8 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
     private RetrofitAPI retrofitAPI;
     private List<GooglePlaceModel> googlePlaceModelList;
     private PlaceModel selectedPlace;
+    private GooglePlaceAdapter googlePlaceAdapter;
+    private InfoWindowAdapter infoWindowAdapter;
 
 
     @SuppressWarnings("deprecation")
@@ -128,7 +137,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
         firebaseAuth = FirebaseAuth.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient( Objects.requireNonNull( getActivity() ) );
-        Places.initialize( requireContext(), "AIzaSyCLy0pBjCXHYXWYBzi3y8gRsp5TcJa2Mbo" );
+        Places.initialize( requireContext(), "AIzaSyAfbGP14EEyceB__hkg5zbOrv5m3iF9vbY" );
         placesClient = Places.createClient( requireContext() );
         final AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient( requireContext() );
@@ -220,8 +229,8 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
     private void checkGps() {
         //LOCATION REQUEST
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval( 10000 );
-        locationRequest.setFastestInterval( 5000 );
+        locationRequest.setInterval( 5000 );
+        locationRequest.setFastestInterval( 2000 );
         locationRequest.setPriority( LocationRequest.PRIORITY_HIGH_ACCURACY );
 
         //Check if gps enabled or not
@@ -268,6 +277,8 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
         assert mapFragment != null;
         mapFragment.getMapAsync( this );
 
+        setUpRecyclerView();
+
     }
 
     //Call Map
@@ -275,6 +286,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
         mGoogleMap = googleMap;
+        loadingDialog.startLoading();
         isLocationPermissionOk = true;
 
         try {
@@ -300,6 +312,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     private void enableUserLocation() {
         if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
@@ -308,6 +321,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
         mGoogleMap.setMyLocationEnabled( true );
         mGoogleMap.getUiSettings().setTiltGesturesEnabled( true );
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled( false );
+        mGoogleMap.setOnMarkerClickListener(this::onMarkerClick);
 
     }
 
@@ -340,6 +354,10 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
                 userLocationMarker = mGoogleMap.addMarker( markerOptions );
                 userLocationMarker.setTag( 703 );
+
+                infoWindowAdapter = null;
+                infoWindowAdapter = new InfoWindowAdapter( currentLocation,requireContext() );
+                mGoogleMap.setInfoWindowAdapter( infoWindowAdapter );
 
 
             }
@@ -426,7 +444,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
             super.onLocationResult( locationResult );
             Log.d( TAG, "onLocationResult: " + locationResult.getLastLocation() );
             if (mGoogleMap != null) {
-                setUserLocationMarker( locationResult.getLastLocation() );
+               // setUserLocationMarker( locationResult.getLastLocation() );
 
             }
 
@@ -605,7 +623,6 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
 
                 if (isLocationPermissionOk) {
-                     //loadingDialog.startLoading();
                     String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
                             + currentLocation.getLatitude() + "," + currentLocation.getLongitude()
                                 + "&radius=" + radius + "&type=" + placeName + "&key=" +
@@ -638,9 +655,14 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
 
                                             }
+
+                                            googlePlaceAdapter.setGooPlaceModels( googlePlaceModelList );
+
                                         } else {
                                             mGoogleMap.clear();
                                             googlePlaceModelList.clear();
+
+                                            googlePlaceAdapter.setGooPlaceModels( googlePlaceModelList );
 
                                             //request for 5km radius then if we don't get any place add 1km in it and request again the process run in this way
                                             radius += 1000;
@@ -653,7 +675,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
                                     Toast.makeText( requireContext(), "Error: " + response.errorBody(), Toast.LENGTH_SHORT ).show();
                                 }
 
-                                   //loadingDialog.stopLoading();
+                                   loadingDialog.stopLoading();
 
                             }
 
@@ -718,7 +740,42 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    //for recycler view of nearby police station
+    private void setUpRecyclerView(){
+
+        binding.placeRecycleView.setLayoutManager( new LinearLayoutManager( requireContext(),LinearLayoutManager.HORIZONTAL,false ) );
+        binding.placeRecycleView.setHasFixedSize( false );
+        googlePlaceAdapter = new GooglePlaceAdapter();
+        binding.placeRecycleView.setAdapter(googlePlaceAdapter);
+
+        SnapHelper snapHelper = new PagerSnapHelper();
+
+        snapHelper.attachToRecyclerView( binding.placeRecycleView );
 
 
+        binding.placeRecycleView.addOnScrollListener( new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled( recyclerView, dx, dy );
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
+                int position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                if(position > -1){
+                    GooglePlaceModel googlePlaceModel = googlePlaceModelList.get( position );
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(googlePlaceModel.getGeometry().getLocation().getLat(),
+                            googlePlaceModel.getGeometry().getLocation().getLng()), 20));
+                }
+            }
+        } );
+    }
+
+
+    @Override
+    public boolean onMarkerClick(@NonNull Marker marker) {
+
+        int markerTag = (int) marker.getTag();
+
+        binding.placeRecycleView.scrollToPosition( markerTag );
+        return false;
+    }
 }

@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PasigSafety">
         <activity
+            android:name=".Admin.AddNewCrimeActivity"
+            android:exported="false" />
+        <activity
             android:name=".User.ChangePasswordSucces"
             android:exported="false" />
         <activity
@@ -91,7 +94,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/API_KEY"/>
+            android:value="@string/API_KEY" />
     </application>
 
 </manifest>

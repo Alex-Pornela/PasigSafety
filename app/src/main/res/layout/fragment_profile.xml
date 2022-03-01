@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#6a5ae0"
+    android:padding="26dp"
     tools:context=".Fragments.UserSettings.ProfileFragment">
 
     <Button
@@ -12,6 +12,128 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Logout"/>
+    
+    <TextView
+        android:id="@+id/crimeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crime Category"
+        android:layout_below="@id/logBtn"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="@font/brandon_grotesque_black"
+        android:layout_marginTop="30dp"/>
+
+    <Spinner
+        android:id="@+id/crimeCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/crimeTitle"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/brgyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Baranggay"
+        android:layout_below="@id/crimeCategory"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="@font/brandon_grotesque_black"
+        android:layout_marginTop="30dp"/>
+
+    <Spinner
+        android:id="@+id/brgySelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/brgyTitle"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/streetTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Street"
+        android:layout_below="@id/brgySelect"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="@font/brandon_grotesque_black"
+        android:layout_marginTop="30dp"/>
+
+    <Spinner
+        android:id="@+id/streetSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/streetTitle"/>
+
+    <TextView
+        android:id="@+id/setDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:layout_below="@id/streetSelect"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="@font/brandon_grotesque_black"
+        android:layout_marginTop="30dp"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:id="@+id/selectDate"
+        android:layout_width="match_parent"
+        android:textColor="@color/black"
+        android:layout_below="@id/setDate"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="date" />
+
+
+    <TextView
+        android:id="@+id/setTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:layout_below="@id/selectDate"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:fontFamily="@font/brandon_grotesque_black"
+        android:layout_marginTop="30dp"/>
+
+
+    <EditText
+        android:id="@+id/selectTime"
+        android:layout_width="match_parent"
+        android:layout_below="@id/setTime"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:focusable="false"
+        android:inputType="date" />
+
+    
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/setTime"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="Submit"
+        android:textAlignment="center"/>
+
+
+
+
+
+</RelativeLayout>

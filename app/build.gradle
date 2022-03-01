@@ -35,6 +35,8 @@ android {
 }
 
 dependencies{
+    implementation 'com.google.firebase:firebase-firestore:24.0.1'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
     def fragment_version = "1.4.1"
 
     // Java language implementation
@@ -114,6 +116,19 @@ dependencies{
 
     // Circular Indicator library
     implementation 'com.victor:lib:1.0.4'
+
+    // Glide Library
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    implementation 'com.github.imperiumlabs:GeoFirestore-Android:v1.5.0'
+
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
+
+    implementation 'com.koalap:geofirestore-android:1.1.0'
+
+
+
 
 
 
