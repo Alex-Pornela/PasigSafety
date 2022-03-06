@@ -4,16 +4,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -27,6 +32,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -42,6 +48,8 @@ public class Login extends AppCompatActivity {
     RelativeLayout progressbar;
     CheckBox rememberMe;
     TextInputEditText phoneNumberEditText, passwordEditText;
+    Dialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +67,9 @@ public class Login extends AppCompatActivity {
         passwordEditText = findViewById( R.id.login_password_editText );
         phoneNumberEditText = findViewById( R.id.login_phone_number_editText );
 
+
+
+
         //Check weather phone number and password is already save in Shared Preferences or not
         SessionManager sessionManager = new SessionManager( Login.this,SessionManager.SESSION_REMEMBERME );
         if(sessionManager.checkRememberMe()){
@@ -67,7 +78,11 @@ public class Login extends AppCompatActivity {
             passwordEditText.setText( rememberMeDetails.get( SessionManager.KEY_SESSIONPASSWORD ) );
 
         }
+
+
     }
+
+
 
 
     //method to login the user in the app
@@ -109,6 +124,8 @@ public class Login extends AppCompatActivity {
             sessionManager.createRememberMeSession( _phoneNumber, _password );
         }
 
+
+
         /*
         Check user if exist
         or not in the database
@@ -138,12 +155,13 @@ public class Login extends AppCompatActivity {
                         String _username = dataSnapshot.child( _completePhoneNumber ).child( "username" ).getValue( String.class );
                         String _gender = dataSnapshot.child( _completePhoneNumber ).child( "gender" ).getValue( String.class );
                         String _password = dataSnapshot.child( _completePhoneNumber ).child( "password" ).getValue( String.class );
+                        String _userRoles = dataSnapshot.child( _completePhoneNumber ).child( "role" ).getValue( String.class );
 
                         //Create a Session
 
 
                         SessionManager sessionManager = new SessionManager( Login.this, SessionManager.SESSION_USERSESSION );
-                        sessionManager.createLoginSession( _fullname, _username, _email,_phoneNo, _password, _dateOfBirth, _gender );
+                        sessionManager.createLoginSession( _fullname, _username, _email,_phoneNo, _password, _dateOfBirth, _gender,_userRoles );
 
                         startActivity( new Intent( getApplicationContext(), UserDashboard.class ) );
                         finish();

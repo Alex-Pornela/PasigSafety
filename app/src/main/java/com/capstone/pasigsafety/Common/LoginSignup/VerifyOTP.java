@@ -35,7 +35,8 @@ public class VerifyOTP extends AppCompatActivity {
     PinView pinFromUser;
     String codeBySystem;
     TextView otpDescriptionText;
-    String fullName, phoneNo, email, username, password, date, gender, whatToDO;
+    String fullName, phoneNo, email, username, password, date, gender, whatToDO, userRoles;
+
 
     private FirebaseAuth mAuth;
 
@@ -60,6 +61,7 @@ public class VerifyOTP extends AppCompatActivity {
         date = getIntent().getStringExtra( "date" );
         gender = getIntent().getStringExtra( "gender" );
         phoneNo = getIntent().getStringExtra( "phoneNo" );
+        userRoles = "user";
         whatToDO = getIntent().getStringExtra( "whatToDO" );
 
 
@@ -160,7 +162,7 @@ public class VerifyOTP extends AppCompatActivity {
         DatabaseReference reference = rootNode.getReference( "Users" );
 
         //Create helperclass reference and store data using firebase
-        UserHelperClass addNewUser = new UserHelperClass( fullName, username, email, phoneNo, password, date, gender );
+        UserHelperClass addNewUser = new UserHelperClass( fullName, username, email, phoneNo, password, date, gender, userRoles );
         reference.child( phoneNo ).setValue( addNewUser );
 
         startActivity( new Intent( getApplicationContext(), Login.class ) );

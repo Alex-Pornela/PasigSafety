@@ -28,4 +28,9 @@
     <color name="textColor">#FFFFFF</color>
     <color name="itemTextColor">#707070</color>
     <color name="transparentColor" >#00FFFFFF</color>
+
+
+    <color name="transparentCircle" >#5B71CCE7</color>
+
+
 </resources>

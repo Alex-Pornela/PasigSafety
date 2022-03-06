@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class AddNewCrimeActivity extends AppCompatActivity {
@@ -208,13 +213,24 @@ public class AddNewCrimeActivity extends AppCompatActivity {
 
     private void savedCrimeType(String item, String icon) {
 
+        if (!validateLoginPassword()) {
+            return;
+        }
 
 
         brgy = binding.brgyName.getText().toString();
         street = binding.streetName.getText().toString();
         date = binding.selectDate.getText().toString();
         time = binding.selectTime.getText().toString();
-        Uri imageUri = Uri.parse(icon);
+
+       Geocoder gcd = new Geocoder(AddNewCrimeActivity.this, Locale.getDefault());
+        List<Address> addresses;
+        try {
+            addresses = gcd.getFromLocation(latitude, longitude, 1);
+            String street2 = addresses.get(0).getThoroughfare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Map<String, Object> crimetype = new HashMap<>();
         FireStoreData data = new FireStoreData( brgy, street, date, time, latitude, longitude, item,icon );
@@ -231,6 +247,37 @@ public class AddNewCrimeActivity extends AppCompatActivity {
                 Toast.makeText( AddNewCrimeActivity.this, "Successfully Added:", Toast.LENGTH_SHORT ).show();
             }
         } );
+    }
+
+    private boolean validateLoginPassword() {
+
+        brgy = binding.brgyName.getText().toString();
+        street = binding.streetName.getText().toString();
+        date = binding.selectDate.getText().toString();
+        time = binding.selectTime.getText().toString();
+
+
+        if (brgy.isEmpty() || street.isEmpty() || date.isEmpty() || time.isEmpty()) {
+            binding.brgyName.setError( "Field cannot be empty" );
+            binding.brgyName.requestFocus();
+            binding.streetName.setError( "Field cannot be empty" );
+            binding.streetName.requestFocus();
+            binding.selectDate.setError( "Field cannot be empty" );
+            binding.selectDate.requestFocus();
+            binding.selectTime.setError( "Field cannot be empty" );
+            binding.selectTime.requestFocus();
+            return false;
+        } else {
+            binding.brgyName.setError( null);
+            binding.brgyName.setEnabled(false);
+            binding.streetName.setError( null );
+            binding.streetName.setEnabled(false);
+            binding.selectDate.setError( null );
+            binding.selectDate.setEnabled(false);
+            binding.selectTime.setError( null );
+            binding.selectTime.setEnabled(false);
+            return true;
+        }
     }
 
 

@@ -18,27 +18,64 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinate"
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="120dp">
+        android:layout_height="100dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="40dp"
+            android:elevation="10dp"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="25dp"
+            app:boxCornerRadiusBottomStart="25dp"
+            app:boxCornerRadiusTopEnd="25dp"
+            app:boxCornerRadiusTopStart="25dp"
+            app:boxStrokeColor="@color/white"
+            app:boxStrokeWidth="0dp"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:layout_anchor="@id/view"
+            app:layout_anchorGravity="bottom|center">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_location"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/primaryColor"
+                android:hint="Search Place"
+                android:inputType="text"
+                android:maxLines="1"
+                android:focusable="false"
+                android:textColorHint="@color/itemTextColor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.mancj.materialsearchbar.MaterialSearchBar
+       <!-- <com.mancj.materialsearchbar.MaterialSearchBar
             android:id="@+id/searchBar"
             style="@style/MaterialSearchBarLight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:elevation="5dp"
+            android:elevation="7dp"
             android:outlineProvider="bounds"
             app:mt_hint="Search Place"
             app:mt_maxSuggestionsCount="10"
             app:mt_placeholder="Search Place"
-            app:mt_speechMode="false" />
+            app:mt_speechMode="false" />-->
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/map_background"
+            android:elevation="5dp" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 
 
     <HorizontalScrollView
@@ -46,15 +83,89 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/coordinate"
+        android:layout_marginTop="10dp"
         android:scrollbars="none">
 
+
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/placesGroup"
+            android:id="@+id/crimeGroup"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             app:singleLine="true"
-            app:singleSelection="true" />
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/robbery"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Robbery"
+                android:elevation="5dp"
+                android:fontFamily="@font/muli_black"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/primaryColor"
+                app:chipIcon="@drawable/chip_robbery"
+                app:iconStartPadding="7dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Theft"
+                android:elevation="5dp"
+                android:fontFamily="@font/muli_black"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/primaryColor"
+                app:chipIcon="@drawable/chip_theft"
+                app:iconStartPadding="7dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Gambling"
+                android:elevation="5dp"
+                android:fontFamily="@font/muli_black"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/primaryColor"
+                app:chipIcon="@drawable/chip_gambling"
+                app:iconStartPadding="7dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Carnapping"
+                android:elevation="5dp"
+                android:fontFamily="@font/muli_black"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/primaryColor"
+                app:chipIcon="@drawable/chip_carnapping"
+                app:iconStartPadding="7dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Scam"
+                android:elevation="5dp"
+                android:fontFamily="@font/muli_black"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/primaryColor"
+                app:chipIcon="@drawable/chip_scam"
+                app:iconStartPadding="7dp" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Physical Injury"
+                android:elevation="5dp"
+                android:fontFamily="@font/muli_black"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/primaryColor"
+                app:chipIcon="@drawable/chip_physical_injury"
+                app:iconStartPadding="7dp" />
+
+
+        </com.google.android.material.chip.ChipGroup>
+
 
     </HorizontalScrollView>
 
@@ -66,7 +177,7 @@
         android:layout_below="@id/placesList"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:src="@drawable/ic_map_type"
