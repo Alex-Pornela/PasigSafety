@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/custom_info_bubble">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp">
+
+        <ImageView
+            android:id="@+id/crime_ic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/robbery_icon" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/crime_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/drug_addicts"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/crime_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="200m away"
+            android:textStyle="bold" />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:paddingEnd="15dp"
+        android:layout_marginTop="15dp"
+        tools:ignore="RtlSymmetry">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow"
+            app:tint="@color/black"/>
+
+    </LinearLayout>
+
+
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="20dp">
+
+        <TextView
+            android:id="@+id/crime_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Drug Addicts"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/crime_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Drug Addicts"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/crime_street"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Drug Addicts"
+            android:textStyle="bold" />
+
+
+
+    </LinearLayout>-->
+
+
+
+    <!--<ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="13dp"
+        android:src="@drawable/arrow"
+        app:tint="@color/black" />-->
+
+</LinearLayout>
