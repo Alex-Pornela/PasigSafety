@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.capstone.pasigsafety.Fragments.CrimeSpotFragment;
@@ -20,15 +21,21 @@ public class UserDashboard extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
+        //getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
         setContentView(R.layout.activity_user_dashboard);
+
+
 
         chipNavigationBar = findViewById(R.id.bottom_nav_menu);
         chipNavigationBar.setItemSelected(R.id.bottom_nav_dashboard,true);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new MainHomeFragment()).commit();
         bottomMenu();
     }
+
+
 
     private void bottomMenu() {
 
@@ -50,6 +57,7 @@ public class UserDashboard extends AppCompatActivity {
                         fragment = new ProfileFragment();
                         break;
                 }
+                assert fragment != null;
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
             }
         });

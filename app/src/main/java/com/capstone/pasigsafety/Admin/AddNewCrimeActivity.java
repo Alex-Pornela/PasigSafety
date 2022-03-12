@@ -222,6 +222,7 @@ public class AddNewCrimeActivity extends AppCompatActivity {
         street = binding.streetName.getText().toString();
         date = binding.selectDate.getText().toString();
         time = binding.selectTime.getText().toString();
+        String crimeIcon = icon;
 
        Geocoder gcd = new Geocoder(AddNewCrimeActivity.this, Locale.getDefault());
         List<Address> addresses;
@@ -233,14 +234,14 @@ public class AddNewCrimeActivity extends AppCompatActivity {
         }
 
         Map<String, Object> crimetype = new HashMap<>();
-        FireStoreData data = new FireStoreData( brgy, street, date, time, latitude, longitude, item,icon );
+        FireStoreData data = new FireStoreData( brgy, street, date, time, latitude, longitude, item,icon+"_marker", crimeIcon);
         //crimetype.put(data);
 
 
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child( "CrimeReport" ).child( brgy ).child( item ).push().setValue( data ).addOnSuccessListener( new OnSuccessListener<Void>() {
+        databaseReference.child( "CrimeReport" ).push().setValue( data ).addOnSuccessListener( new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
 

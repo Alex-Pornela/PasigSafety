@@ -19,8 +19,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -39,17 +37,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.capstone.pasigsafety.Adapter.Crime;
 import com.capstone.pasigsafety.Admin.AddNewCrimeActivity;
 import com.capstone.pasigsafety.Admin.FireStoreData;
 import com.capstone.pasigsafety.Databases.SessionManager;
-import com.capstone.pasigsafety.Databases.UserHelperClass;
 import com.capstone.pasigsafety.R;
+import com.capstone.pasigsafety.Utility.LoadingDialog;
 import com.capstone.pasigsafety.databinding.FragmentMainHomeBinding;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -97,7 +96,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -106,12 +104,9 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -131,15 +126,13 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
     private List<AutocompletePrediction> predictionList;
     private Location currentLocation;
     private FirebaseAuth firebaseAuth;
-    LocationManager locationManager;
     Dialog dialog;
-    FirebaseFirestore db;
-    private ArrayAdapter<FireStoreData> adapter;
-    private DatabaseReference databaseReference;
-    private String city;
     private final int radius = 500;
-    private Marker robberyMarker;
-
+    private LoadingDialog loadingDialog;
+    private Context context;
+    private List<Crime> crimes;
+    private LocationManager mLocationManager;
+    LocationListener mLocationListeners;
 
 
     @SuppressLint("MissingPermission")
@@ -157,6 +150,11 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
         placesClient = Places.createClient( requireContext() );
         final AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient( requireContext() );
+
+
+
+        loadingDialog = new LoadingDialog( requireActivity() );
+
 
 
         //search bar for places
@@ -260,19 +258,89 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
 
         //For retrieving crimeInfo in Firebase
 
-        binding.robbery.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //FireRobberyData();
-                NearbyCrime();
-            }
-        } );
-
 
         return binding.getRoot();
     }
 
+
+    public boolean isAttachedToActivity() {
+        boolean attached = isVisible() && getActivity() != null;
+        return attached;
+    }
+
+
+
+
+    @SuppressLint("PotentialBehaviorOverride")
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated( view, savedInstanceState );
+
+
+        //sync map in layout
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById( R.id.homeMap );
+        assert mapFragment != null;
+        mapFragment.getMapAsync( this );
+
+
+
+    }
+
+
+
+
+    //Call Map
+    @SuppressLint("PotentialBehaviorOverride")
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
+
+
+        mGoogleMap = googleMap;
+        mGoogleMap.setOnMapLongClickListener( this );
+
+
+
+        checkGps();
+        //method to find nearby crime spot
+        NearbyCrime();
+
+
+        try {
+            boolean success = mGoogleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( Objects.requireNonNull( getContext() ), R.raw.maps_style ) );
+            if (!success)
+                Log.e( "MAP ERROR", "style parsing error" );
+        } catch (Resources.NotFoundException e) {
+            Log.e( "MAP_ERROR", e.getMessage() );
+        }
+
+        if (ContextCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.
+                PERMISSION_GRANTED) {
+            enableUserLocation();
+            //zoomToUserLocation();
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale( Objects.requireNonNull( getActivity() ), Manifest.permission.ACCESS_FINE_LOCATION )) {
+                //We can show user a dialog why this permission is necessary
+                ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE );
+            } else {
+                ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE );
+            }
+        }
+
+
+    }
+
+    /*private void checkIfFragmentAttached() {
+        if (fragment && context != null) {
+            operation(requireContext())
+        }
+    }*/
+
+
+    @SuppressLint("PotentialBehaviorOverride")
     private void NearbyCrime() {
+
+        loadingDialog.startLoading();
 
         SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
         HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
@@ -288,7 +356,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference robberyRef = db.child("CrimeReport").child("Palatiw").child("Robbery");
+                DatabaseReference robberyRef = db.child("CrimeReport");
                 robberyRef.get().addOnCompleteListener( new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -298,35 +366,138 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
 
                                 FireStoreData data = ds.getValue(FireStoreData.class);
 
+                                Map<String,Object> places = new HashMap<>();
 
 
-                                double lat = data.getLatitude();
-                                double lng = data.getLongitude();
 
 
-                                GeoQuery geoQuery = geoFire.queryAtLocation( new GeoLocation( lat,lng ),0.5 );
 
-                                HashMap<String,Marker> markers = new HashMap<>();
+                                String brgy = data.getBrgy();
+                                String street = data.getStreet();
+                                String date = data.getDate();
+                                String time = data.getTime();
+                                double latitude = data.getLatitude();
+                                double longitude = data.getLongitude();
+                                String item = data.getItem();
+                                String icon = data.getIcon();
+                                String crimeIcon = data.getCrimeIcon();
+
+
+                                FireStoreData details = new FireStoreData( brgy, street, date, time, latitude, longitude, item,icon,crimeIcon );
+
+
+
+                                // places.put( "crimePlace",detail );
+                                // crimePlaces.add( placeCrime );
+
+
+
+
+
+                                GeoQuery geoQuery = geoFire.queryAtLocation( new GeoLocation( latitude,longitude ),0.5 );
+
+
+                                HashMap<String, Marker> markers = new HashMap<>();
+
 
                                 geoQuery.addGeoQueryEventListener( new GeoQueryEventListener() {
                                     @Override
                                     public void onKeyEntered(String key, GeoLocation location) {
 
+                                        if (isAttachedToActivity()){
+
+                                            //get string icon using filename
+                                            int resourceID = getResources().getIdentifier(
+                                                    data.getIcon(), "drawable",
+                                                    getActivity() .getPackageName());
+
+
+
+                                            //bitmapDescriptor for marker using filename
+                                            BitmapDescriptor crime_icon = BitmapDescriptorFactory.fromResource(resourceID);
+
+                                            LatLng latLng = new LatLng(latitude,longitude);
 
 
 
 
-                                        BitmapDescriptor robbery_icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_assalto);
+                                            Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)
+                                                    .icon(crime_icon));
+                                            markers.put(key,marker);
+                                            //detailMarkerMap.put(marker,detail);
+                                            marker.setTag(details);
 
-                                        LatLng latLng = new LatLng(lat,lng);
-
-                                        Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng))
-                                                .icon(robbery_icon));
-                                        markers.put(key, marker);
+                                        }
 
 
-                                        //robberyMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).icon( robbery_icon ));
 
+
+
+
+
+                                        if(mGoogleMap != null){
+
+
+                                            //Toast.makeText( requireContext(), markers.size() + " crime incident found nearby", Toast.LENGTH_SHORT ).show();
+                                            mGoogleMap.setInfoWindowAdapter( new GoogleMap.InfoWindowAdapter() {
+
+                                                @Nullable
+                                                @Override
+                                                public View getInfoContents(@NonNull Marker marker) {
+
+
+
+                                                    return null;
+                                                }
+
+                                                @Nullable
+                                                @Override
+                                                public View getInfoWindow(@NonNull Marker marker) {
+                                                    marker.getTitle();
+
+
+                                                    View view = getLayoutInflater().inflate(
+                                                            R.layout.info_window, null);
+
+
+
+                                                    TextView crimeType = view.findViewById( R.id.crime_type );
+                                                    TextView crimeDistance = view.findViewById( R.id.crime_distance );
+                                                    //TextView crimeStreet = view.findViewById( R.id.crime_street );
+
+                                                    ImageView crimeIcon =  view.findViewById(R.id.crime_ic);
+
+
+                                                    FireStoreData adata = (FireStoreData) marker.getTag();
+
+                                                    Location crimeLocation = new Location("");
+                                                    crimeLocation.setLatitude( adata.getLatitude() );
+                                                    crimeLocation.setLongitude( adata.getLongitude() );
+
+
+
+                                                    double distance = (currentLocation.distanceTo(crimeLocation)/1000)*1000;
+                                                    int i = (int) distance;
+                                                    String UserToCrime = Integer.toString(i);
+
+                                                    crimeType.setText( adata.getItem() );
+                                                    crimeDistance.setText( UserToCrime + "m away");
+
+
+                                                    int resourceID = getResources().getIdentifier(
+                                                            adata.getCrimeIcon(), "drawable",
+                                                            getActivity().getPackageName());
+                                                    crimeIcon.setImageResource(resourceID);
+
+
+
+
+                                                    return view;
+                                                }
+                                            } );
+                                        }else {
+                                            Toast.makeText( requireContext(), "No nearby crime incident found", Toast.LENGTH_SHORT ).show();
+                                        }
 
                                     }
 
@@ -357,6 +528,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
                                     }
                                 } );
 
+                                loadingDialog.stopLoading();
+
 
 
                             }
@@ -375,314 +548,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
 
     }
 
-    private void FireRobberyData() {
-
-
-        SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
-        HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
-
-
-        FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
-        DatabaseReference reference = rootNode.getReference( "Users" );
-
-        reference.child( userDetails.get( SessionManager.KEY_PHONENUMBER ) ).child( "position" ).addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                UserHelperClass userLocation = snapshot.getValue(UserHelperClass.class);
-
-                double lat = userLocation.getLatitude();
-                double lng = userLocation.getLongitude();
-
-                Location userUpdateLocation = new Location("");
-
-
-
-                userUpdateLocation.setLatitude( lat );
-                userUpdateLocation.setLongitude( lng );
-
-                if(currentLocation != null){
-
-                    DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                    DatabaseReference robberyRef = db.child("CrimeReport").child("Palatiw").child("Robbery");
-                    robberyRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-
-                        Map<String, Object> firedata = new HashMap<>();
-                        @Override
-                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DataSnapshot snapshot = task.getResult();
-                                for (DataSnapshot ds : snapshot.getChildren()) {
-
-
-
-
-                                    // String brgy = ds.child("brgy").getValue(String.class);
-
-                                    FireStoreData data = ds.getValue(FireStoreData.class);
-
-
-                                    double lat = data.getLatitude();
-                                    double lng = data.getLongitude();
-                                    String crimePlace = data.getStreet();
-
-                                    Location crimeLoc = new Location("");
-                                    crimeLoc.setLatitude( lat );
-                                    crimeLoc.setLongitude( lng );
-
-                                   //float[] dist = new float[1];
-
-                                    //Location.distanceBetween(currentLocation.getLatitude(),currentLocation.getLongitude(),lat,lng,dist);
-
-
-
-                                    double distanceInKiloMeters = (userUpdateLocation.distanceTo(crimeLoc)) / radius; // as distance is in meter
-
-
-
-                                    if(distanceInKiloMeters <= 1) {
-
-                                        BitmapDescriptor robbery_icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_assalto);
-
-                                        LatLng latLng = new LatLng(crimeLoc.getLatitude(),crimeLoc.getLongitude());
-
-                                        mGoogleMap.addMarker(new MarkerOptions()
-                                                .position(latLng)
-                                                .title("Firestore Data")
-                                                .icon(robbery_icon));
-
-                                        robberyMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(crimePlace).icon( robbery_icon ));
-                                        robberyMarker.setTag( 703 );
-
-// It is in range of 1 km
-                                    }
-
-                                }
-                            } else {
-                                Log.d("TAG", task.getException().getMessage()); //Never ignore potential errors!
-                            }
-                        }
-                    });
-
-                }
-
-                //String value = snapshot.getValue(String.class);
-
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        } );
-
-
-
-
-
-
-
-
-
-        /*if (ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener( new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-
-                if(location != null){
-
-
-                    DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                    DatabaseReference robberyRef = db.child("CrimeReport").child("Palatiw").child("Robbery");
-                    robberyRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-
-                        Map<String, Object> firedata = new HashMap<>();
-                        @Override
-                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DataSnapshot snapshot = task.getResult();
-                                for (DataSnapshot ds : snapshot.getChildren()) {
-                                    // String brgy = ds.child("brgy").getValue(String.class);
-
-                                    FireStoreData data = ds.getValue(FireStoreData.class);
-
-
-                                    double lat = data.getLatitude();
-                                    double lng = data.getLongitude();
-
-                                    Location crimeLoc = new Location("");
-                                    crimeLoc.setLatitude( lat );
-                                    crimeLoc.setLongitude( lng );
-
-                                    double distanceInKiloMeters = (currentLocation.distanceTo(crimeLoc)) / radius; // as distance is in meter
-
-                                    if(distanceInKiloMeters <= 1) {
-
-                                        BitmapDescriptor robbery_icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_assalto);
-
-                                        LatLng latLng = new LatLng(crimeLoc.getLatitude(),crimeLoc.getLongitude());
-
-                                        mGoogleMap.addMarker(new MarkerOptions()
-                                                .position(latLng)
-                                                .title("Firestore Data")
-                                                .icon(robbery_icon));
-
-// It is in range of 1 km
-                                    }
-                                    else {
-
-                                        Toast.makeText( requireContext(), "No nearby crime incident found", Toast.LENGTH_SHORT ).show();
-
-// not in range of 1 km
-                                    }
-
-
-                                *//*BitmapDescriptor robbery_icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_assalto);
-
-                                LatLng latLng = new LatLng(lat, lng);
-
-                                mGoogleMap.addMarker(new MarkerOptions()
-                                        .position(latLng)
-                                        .title("Firestore Data")
-                                        .icon(robbery_icon));
-*//*
-                                }
-                            } else {
-                                Log.d("TAG", task.getException().getMessage()); //Never ignore potential errors!
-                            }
-                        }
-                    });
-
-                }
-            }
-        } );
-*/
-
-        }
-
-
-
-
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated( view, savedInstanceState );
-
-
-        //sync map in layout
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById( R.id.homeMap );
-        assert mapFragment != null;
-        mapFragment.getMapAsync( this );
-
-    }
-
-
-
-
-    //Call Map
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-
-
-
-        mGoogleMap = googleMap;
-        mGoogleMap.setOnMapLongClickListener( this );
-        checkGps();
-
-
-
-        try {
-            boolean success = mGoogleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( getContext(), R.raw.maps_style ) );
-            if (!success)
-                Log.e( "MAP ERROR", "style parsing error" );
-        } catch (Resources.NotFoundException e) {
-            Log.e( "MAP_ERROR", e.getMessage() );
-        }
-
-        if (ContextCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.
-                PERMISSION_GRANTED) {
-            enableUserLocation();
-            //zoomToUserLocation();
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale( Objects.requireNonNull( getActivity() ), Manifest.permission.ACCESS_FINE_LOCATION )) {
-                //We can show user a dialog why this permission is necessary
-                ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE );
-            } else {
-                ActivityCompat.requestPermissions( getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE );
-            }
-        }
-
-        /*binding.robbery.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference robberyRef = db.child("CrimeReport").child("Palatiw").child("Robbery");
-                robberyRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-
-                    Map<String, Object> firedata = new HashMap<>();
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DataSnapshot snapshot = task.getResult();
-                            for (DataSnapshot ds : snapshot.getChildren()) {
-                                // String brgy = ds.child("brgy").getValue(String.class);
-
-                                FireStoreData data = ds.getValue(FireStoreData.class);
-
-
-                                double lat = data.getLatitude();
-                                double lng = data.getLongitude();
-
-                                Location crimeLoc = new Location("");
-                                crimeLoc.setLatitude( lat );
-                                crimeLoc.setLongitude( lng );
-
-                                double distanceInKiloMeters = (currentLocation.distanceTo(crimeLoc)) / radius; // as distance is in meter
-
-                                if(distanceInKiloMeters <= 1) {
-
-                                    BitmapDescriptor robbery_icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_assalto);
-
-                                    LatLng latLng = new LatLng(crimeLoc.getLatitude(),crimeLoc.getLongitude());
-
-                                    mGoogleMap.addMarker(new MarkerOptions()
-                                            .position(latLng)
-                                            .title("Firestore Data")
-                                            .icon(robbery_icon));
-
-// It is in range of 1 km
-                                }
-                                else {
-
-// not in range of 1 km
-                                }
-
-
-                                *//*BitmapDescriptor robbery_icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_assalto);
-
-                                LatLng latLng = new LatLng(lat, lng);
-
-                                mGoogleMap.addMarker(new MarkerOptions()
-                                        .position(latLng)
-                                        .title("Firestore Data")
-                                        .icon(robbery_icon));
-*//*
-                            }
-                        } else {
-                            Log.d("TAG", task.getException().getMessage()); //Never ignore potential errors!
-                        }
-                    }
-                });
-            }
-        } );*/
-
-    }
-
 
 
 
@@ -690,7 +555,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
     public void onStart() {
         super.onStart();
         if (ContextCompat.checkSelfPermission( requireContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED) {
-//            getLastLocation();
+//           getLastKnownLocation();
             checkSettingsAndStartLocationUpdates();
         } else {
             checkPermission();
@@ -830,7 +695,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
                 markerOptions.position( latLng );
                 markerOptions.icon( bitmapDescriptorFromVector( getContext(), R.drawable.ic_round_location_on_24 ) );
                 markerOptions.snippet( userDetails.get( SessionManager.KEY_FULLNAME ) );*/
-                mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( latLng, 15f ) );
+                mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( latLng, 15.5f ) );
                 /*mGoogleMap.addCircle(new CircleOptions()
                         .center(latLng)
                         .radius(radius)

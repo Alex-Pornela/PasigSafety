@@ -86,6 +86,9 @@
     <string name="search_place">Search Place</string>
 
 
+    <string name="drug_addicts">Drug Addicts</string>
+
+
     <!--For Crime Type Array-->
     <string-array name="crime_type">
         <item>Robbery</item>
@@ -98,12 +101,12 @@
 
     <!--For Crime Icon Item-->
     <string-array name="crime_ic">
-        <item>ic_assalto</item>
-        <item>ic_moto</item>
-        <item>ic_carro</item>
-        <item>ic_sequestro</item>
-        <item>ic_flanelinha</item>
-        <item>ic_latrocinio</item>
+        <item>robbery_icon</item>
+        <item>scam_icon</item>
+        <item>theft_icon</item>
+        <item>physical_injury_icon</item>
+        <item>gambling_icon</item>
+        <item>carnapping_icon</item>
     </string-array>
 
     <!--For Crime Description Item-->

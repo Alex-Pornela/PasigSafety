@@ -98,6 +98,7 @@ dependencies{
     implementation 'com.google.maps:google-maps-services:0.2.9'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.androidmapsextensions:android-maps-extensions:2.2.0'
 
     //material search bar
     implementation 'com.github.mancj:MaterialSearchBar:0.8.5'

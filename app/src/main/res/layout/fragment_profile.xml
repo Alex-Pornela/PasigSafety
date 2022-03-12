@@ -1,139 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="26dp"
+    android:background="#ECECEC"
     tools:context=".Fragments.UserSettings.ProfileFragment">
 
-    <Button
-        android:id="@+id/logBtn"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Logout"/>
-    
-    <TextView
-        android:id="@+id/crimeTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Crime Category"
-        android:layout_below="@id/logBtn"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:fontFamily="@font/brandon_grotesque_black"
-        android:layout_marginTop="30dp"/>
+        android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/crimeCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/crimeTitle"
-        android:layout_marginTop="20dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/brgyTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Baranggay"
-        android:layout_below="@id/crimeCategory"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:fontFamily="@font/brandon_grotesque_black"
-        android:layout_marginTop="30dp"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/brgySelect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/brgyTitle"
-        android:layout_marginTop="20dp" />
-
-    <TextView
-        android:id="@+id/streetTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Street"
-        android:layout_below="@id/brgySelect"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:fontFamily="@font/brandon_grotesque_black"
-        android:layout_marginTop="30dp"/>
-
-    <Spinner
-        android:id="@+id/streetSelect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/streetTitle"/>
-
-    <TextView
-        android:id="@+id/setDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Date"
-        android:layout_below="@id/streetSelect"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:fontFamily="@font/brandon_grotesque_black"
-        android:layout_marginTop="30dp"/>
+                <ImageView
+                    android:id="@+id/top_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/top_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
-    <EditText
-        android:id="@+id/selectDate"
-        android:layout_width="match_parent"
-        android:textColor="@color/black"
-        android:layout_below="@id/setDate"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="date" />
-
-
-    <TextView
-        android:id="@+id/setTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Time"
-        android:layout_below="@id/selectDate"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:fontFamily="@font/brandon_grotesque_black"
-        android:layout_marginTop="30dp"/>
-
-
-    <EditText
-        android:id="@+id/selectTime"
-        android:layout_width="match_parent"
-        android:layout_below="@id/setTime"
-        android:textColor="@color/black"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="date" />
-
-    
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/setTime"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:text="Submit"
-        android:textAlignment="center"/>
+                <ImageView
+                    android:id="@+id/user_avatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/male_icon"
+                    app:layout_constraintBottom_toBottomOf="@+id/top_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/top_bg"
+                    app:layout_constraintVertical_bias="0.586" />
 
 
 
+                <TextView
+                    android:id="@+id/user_full_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/brandon_grotesque_black"
+                    android:text="Alex Pornela"
+                    android:textSize="25sp"
+                    app:layout_constraintBottom_toBottomOf="@id/user_email"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/user_avatar"
+                    app:layout_constraintVertical_bias="0.182" />
+
+                <TextView
+                    android:id="@+id/user_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/muli_black"
+                    android:text="alexpornela@gmail.com"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/user_full_name"
+                    app:layout_constraintVertical_bias="0.0" />
 
 
-</RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/user_email">
+
+
+                    <Button
+                        android:id="@+id/user_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/user_bg_btn"
+                        android:text="Personal Information"
+                        android:textAllCaps="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/muli"
+                        android:textAlignment="viewStart"
+                        android:drawableStart="@drawable/ic_3"
+                        android:drawablePadding="20dp"
+                        android:elevation="5dp"
+                        android:paddingStart="15dp"/>
+
+                    <Button
+                        android:id="@+id/user_feedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/user_bg_btn"
+                        android:text="Feedback"
+                        android:textAllCaps="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/muli"
+                        android:textAlignment="viewStart"
+                        android:drawableStart="@drawable/ic_2"
+                        android:drawablePadding="20dp"
+                        android:elevation="5dp"
+                        android:paddingStart="15dp"/>
+
+                    <Button
+                        android:id="@+id/app_settings"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/user_bg_btn"
+                        android:text="App Settings"
+                        android:textAllCaps="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/muli"
+                        android:textAlignment="viewStart"
+                        android:drawableStart="@drawable/ic_1"
+                        android:drawablePadding="20dp"
+                        android:elevation="5dp"
+                        android:paddingStart="15dp"/>
+
+                    <!--<Button
+                        android:id="@+id/app_about"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/user_bg_btn"
+                        android:text="About"
+                        android:textAllCaps="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/muli"
+                        android:textAlignment="viewStart"
+                        android:drawableStart="@drawable/about_icon1"
+                        android:drawablePadding="20dp"
+                        android:elevation="5dp"
+                        android:paddingStart="15dp"/>-->
+
+                    <Button
+                        android:id="@+id/logBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/background_blue"
+                        android:elevation="5dp"
+                        android:text="Logout"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

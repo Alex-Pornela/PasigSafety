@@ -26,6 +26,7 @@ public class FireStoreData  {
     private Double longitude;
     private String item;
     private String icon;
+    private String crimeIcon;
 
 
 
@@ -36,7 +37,7 @@ public class FireStoreData  {
 
 
 
-    public FireStoreData(String brgy, String street, String date, String time, Double latitude, Double longitude,String item,String icon) {
+    public FireStoreData(String brgy, String street, String date, String time, Double latitude, Double longitude,String item,String icon,String crimeIcon) {
         this.brgy = brgy;
         this.street = street;
         this.date = date;
@@ -45,6 +46,7 @@ public class FireStoreData  {
         this.longitude = longitude;
         this.item = item;
         this.icon= icon;
+        this.crimeIcon= crimeIcon;
 
     }
 
@@ -107,6 +109,19 @@ public class FireStoreData  {
     }
 
 
+    public String getIcon() {
+        return icon;
+    }
 
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
+    public String getCrimeIcon() {
+        return crimeIcon;
+    }
+
+    public void setCrimeIcon(String crimeIcon) {
+        this.crimeIcon = crimeIcon;
+    }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -39,9 +40,7 @@ import java.util.Locale;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    private String crimeType;
-    private String crimeIcon;
-    private int hour,minute;
+
 
 
     @Override
@@ -49,6 +48,17 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate( inflater, container, false );
+
+
+        binding.userFeedback.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent viewIntent = new Intent("android.intent.action.VIEW",
+                                Uri.parse("http://www.stackoverflow.com/"));
+                startActivity(viewIntent);
+            }
+        } );
 
 
 
@@ -63,152 +73,12 @@ public class ProfileFragment extends Fragment {
             }
         } );
 
-        selectCrimeType();
-        selectBrgy();
-        setTime();
-        setDate();
-
-       // crimeAdapter = ArrayAdapter.createFromResource( requireContext(), R.array.crime_type, R.layout.spinner_layout );
-
-
-
-
-
 
 
         return binding.getRoot();
     }
 
-    private void selectBrgy() {
-        ArrayAdapter <String> arrayAdapter;
-        String[] brgy = getResources().getStringArray(R.array.barangay_select);
 
-        arrayAdapter = new ArrayAdapter<String>( requireContext(),R.layout.barangay_select_item,brgy );
-
-        binding.brgySelect.setAdapter(arrayAdapter);
-
-        binding.brgySelect.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        } );
-
-
-    }
-
-    private void setDate() {
-
-        binding.selectDate.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final Calendar calendar = Calendar.getInstance();
-                binding.selectDate.requestFocus();
-                binding.selectDate.setInputType( InputType.TYPE_NULL);
-
-                DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int day) {
-
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, day);
-
-                        String myFormat = "MM/dd/yy"; // In which you need put here
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-                        binding.selectDate.setText(sdf.format(calendar.getTime()));
-                    }
-                };
-                new DatePickerDialog(requireContext(), onDateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        } );
-    }
-
-    private void setTime() {
-
-        binding.selectTime.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                binding.selectTime.requestFocus();
-                binding.selectTime.setInputType( InputType.TYPE_NULL);
-
-                TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
-
-                        hour = selectedHour;
-                        minute = selectedMinute;
-
-
-                        String am_pm = "";
-
-                        Calendar datetime = Calendar.getInstance();
-                        datetime.set(Calendar.HOUR_OF_DAY, hour);
-                        datetime.set(Calendar.MINUTE, minute);
-
-                        if (datetime.get(Calendar.AM_PM) == Calendar.AM)
-                            am_pm = "AM";
-                        else if (datetime.get(Calendar.AM_PM) == Calendar.PM)
-                            am_pm = "PM";
-
-                        String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ?"12":datetime.get(Calendar.HOUR)+"";
-
-                        binding.selectTime.setText( strHrsToShow+":"+datetime.get(Calendar.MINUTE)+" "+am_pm );
-                    }
-                };
-
-
-                TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), /*style,*/ onTimeSetListener, hour, minute, false);
-
-                timePickerDialog.setTitle("Select Time");
-                timePickerDialog.show();
-
-            }
-        } );
-    }
-
-    private void selectCrimeType() {
-
-        List<Crime> crimes = new ArrayList<>();
-
-        String[] crimeTypes = getResources().getStringArray(R.array.crime_type);
-        String[] crimeDesc = getResources().getStringArray(R.array.crime_desc);
-        final String[] crimeIcons = getResources().getStringArray(
-                R.array.crime_ic);
-
-        for (int i = 0; i < crimeDesc.length; i++) {
-            Crime crime = new Crime();
-            crime.setCrimeType(crimeTypes[i]);
-            crime.setCrimeDesc(crimeDesc[i]);
-            crime.setImage(crimeIcons[i]);
-            crimes.add(crime);
-        }
-        final CrimeAdapter adapter = new CrimeAdapter(requireContext(), crimes);
-        binding.crimeCategory.setAdapter(adapter);
-        binding.crimeCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                crimeType = ((Crime) adapter.getItem(position)).getCrimeType();
-                crimeIcon = crimeIcons[position];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
 
 
 }
