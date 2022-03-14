@@ -7,19 +7,18 @@
     android:orientation="horizontal"
     android:background="@drawable/custom_info_bubble">
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="5dp">
 
         <ImageView
             android:id="@+id/crime_ic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="5dp"
-            android:src="@drawable/robbery_icon" />
+            android:src="@drawable/police_icon_marker" />
 
     </LinearLayout>
 
@@ -30,14 +29,14 @@
         android:layout_marginTop="8dp">
 
         <TextView
-            android:id="@+id/crime_type"
+            android:id="@+id/station_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/drug_addicts"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/crime_distance"
+            android:id="@+id/station_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="200m away"
@@ -62,8 +61,5 @@
             app:tint="@color/black"/>
 
     </LinearLayout>
-
-
-
 
 </LinearLayout>

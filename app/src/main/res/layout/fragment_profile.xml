@@ -39,7 +39,7 @@
                     android:id="@+id/user_avatar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/male_icon"
+                    android:src="@drawable/female_icon"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.519"
@@ -145,25 +145,7 @@
                         android:elevation="5dp"
                         android:paddingStart="15dp"/>
 
-                    <!--<Button
-                        android:id="@+id/app_about"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginEnd="24dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/user_bg_btn"
-                        android:text="About"
-                        android:textAllCaps="false"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/muli"
-                        android:textAlignment="viewStart"
-                        android:drawableStart="@drawable/about_icon1"
-                        android:drawablePadding="20dp"
-                        android:elevation="5dp"
-                        android:paddingStart="15dp"/>-->
+
 
                     <Button
                         android:id="@+id/logBtn"

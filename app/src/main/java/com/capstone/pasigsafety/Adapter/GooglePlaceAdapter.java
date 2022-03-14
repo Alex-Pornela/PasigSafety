@@ -1,14 +1,12 @@
 package com.capstone.pasigsafety.Adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.pasigsafety.GooglePlaceModel;
 import com.capstone.pasigsafety.R;
 import com.capstone.pasigsafety.databinding.PlaceItemLayoutBinding;
 

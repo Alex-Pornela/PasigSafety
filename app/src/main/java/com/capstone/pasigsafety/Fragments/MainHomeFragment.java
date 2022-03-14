@@ -256,7 +256,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
         } );
 
 
-        //For retrieving crimeInfo in Firebase
+
 
 
         return binding.getRoot();
@@ -330,11 +330,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
 
     }
 
-    /*private void checkIfFragmentAttached() {
-        if (fragment && context != null) {
-            operation(requireContext())
-        }
-    }*/
+
 
 
     @SuppressLint("PotentialBehaviorOverride")
@@ -745,22 +741,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
             geoFire.setLocation("myLocation", new GeoLocation(latitude,longitude));
 
 
-
-            /*Geocoder gcd = new Geocoder(requireContext(), Locale.getDefault());
-            List<Address> addresses;
-            try {
-                addresses = gcd.getFromLocation(latitude, longitude, 1);
-                city = addresses.get(0).getAddressLine( 0 );
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            UserHelperClass location = new UserHelperClass(city,latitude,longitude);
-            userLocation.put( "position",location );
-
-
-            reference.child( userDetails.get( SessionManager.KEY_PHONENUMBER ) ).updateChildren(userLocation);*/
 
             if (mGoogleMap != null) {
                  setUserLocationCircle(locationResult.getLastLocation());

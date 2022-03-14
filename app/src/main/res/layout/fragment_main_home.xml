@@ -54,28 +54,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-       <!-- <com.mancj.materialsearchbar.MaterialSearchBar
-            android:id="@+id/searchBar"
-            style="@style/MaterialSearchBarLight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:elevation="7dp"
-            android:outlineProvider="bounds"
-            app:mt_hint="Search Place"
-            app:mt_maxSuggestionsCount="10"
-            app:mt_placeholder="Search Place"
-            app:mt_speechMode="false" />-->
-
-        <!--<View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/map_background"
-            android:elevation="5dp" />-->
-
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

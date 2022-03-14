@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 
 import com.capstone.pasigsafety.Adapter.Crime;
 import com.capstone.pasigsafety.Adapter.CrimeAdapter;
+import com.capstone.pasigsafety.Admin.FireStoreData;
 import com.capstone.pasigsafety.Common.LoginSignup.Login;
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.R;
@@ -33,6 +34,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,7 +57,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
 
                 Intent viewIntent = new Intent("android.intent.action.VIEW",
-                                Uri.parse("http://www.stackoverflow.com/"));
+                                Uri.parse("https://youtu.be/vzjUs5yR68o?t=3"));
                 startActivity(viewIntent);
             }
         } );
@@ -73,12 +75,52 @@ public class ProfileFragment extends Fragment {
             }
         } );
 
+        setUserInfo();
+
 
 
         return binding.getRoot();
     }
 
+    private void setUserInfo() {
 
+
+        SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
+        HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
+
+        String female = "female_icon";
+        String male = "male_icon";
+        String gender = userDetails.get(SessionManager.KEY_GENDER);
+
+        if(gender.equals( "Female" )){
+
+            int resourceID = getResources().getIdentifier(
+                    female, "drawable",
+                    getActivity() .getPackageName());
+
+            binding.userAvatar.setImageResource( resourceID );
+
+        }
+        if(gender.equals( "Male" )){
+
+            int resourceID = getResources().getIdentifier(
+                    male, "drawable",
+                    getActivity() .getPackageName());
+
+            binding.userAvatar.setImageResource( resourceID );
+        }
+
+
+        int resourceID = getResources().getIdentifier(
+                userDetails.get(SessionManager.KEY_GENDER), "drawable",
+                getActivity() .getPackageName());
+
+        binding.userFullName.setText( userDetails.get( SessionManager.KEY_FULLNAME ) );
+        binding.userEmail.setText( userDetails.get( SessionManager.KEY_EMAIL ) );
+
+
+
+    }
 
 
 }
