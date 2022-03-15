@@ -133,6 +133,9 @@ dependencies{
 
     implementation 'com.firebase:geofire-android:3.1.0'
 
+    //For drawing route
+    implementation 'com.github.jd-alexander:library:1.1.0'
+
 
 
 

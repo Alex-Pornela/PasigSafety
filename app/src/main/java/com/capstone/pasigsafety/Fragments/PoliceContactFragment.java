@@ -42,11 +42,16 @@ import com.capstone.pasigsafety.Adapter.Crime;
 import com.capstone.pasigsafety.Admin.AddNewCrimeActivity;
 import com.capstone.pasigsafety.Admin.FireStoreData;
 import com.capstone.pasigsafety.Admin.PoliceStationData;
+import com.capstone.pasigsafety.Common.LoadingDialog;
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.R;
-import com.capstone.pasigsafety.Utility.LoadingDialog;
 import com.capstone.pasigsafety.databinding.FragmentMainHomeBinding;
 import com.capstone.pasigsafety.databinding.FragmentPoliceContactBinding;
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -75,6 +80,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -100,6 +107,9 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +117,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class PoliceContactFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+public class PoliceContactFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, RoutingListener {
 
     private FragmentPoliceContactBinding binding;
     private GoogleMap mGoogleMap;
@@ -123,12 +133,14 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
     private Location currentLocation;
     private FirebaseAuth firebaseAuth;
     Dialog dialog;
-    private final int radius = 1000;
+    private final int radius = 2000;
     private LoadingDialog loadingDialog;
     private Context context;
     private List<Crime> crimes;
     private LocationManager mLocationManager;
     LocationListener mLocationListeners;
+    private List<Polyline> polylines;
+
 
 
 
@@ -214,6 +226,8 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
         // user location button
         binding.currentLocation.setOnClickListener( searchLocation -> checkGps() );
+
+
 
 
         return binding.getRoot();
@@ -313,6 +327,8 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
                             for (DataSnapshot ds : snapshot.getChildren()){
 
 
+
+
                                 PoliceStationData data = ds.getValue(PoliceStationData.class);
 
                                 Map<String,Object> places = new HashMap<>();
@@ -326,7 +342,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
                                 PoliceStationData details = new PoliceStationData(name,number,latitude,longitude,address);
 
-                                GeoQuery geoQuery = geoFire.queryAtLocation( new GeoLocation( latitude,longitude ),1 );
+                                GeoQuery geoQuery = geoFire.queryAtLocation( new GeoLocation( latitude,longitude ),2 );
 
 
                                 HashMap<String, Marker> markers = new HashMap<>();
@@ -336,13 +352,12 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
                                     @Override
                                     public void onKeyEntered(String key, GeoLocation location) {
 
+
+                                        Toast.makeText( requireContext(), "location: "+location, Toast.LENGTH_SHORT ).show();
+
                                         if (isAttachedToActivity()){
 
-
                                             LatLng latLng = new LatLng(latitude,longitude);
-
-
-
 
                                             Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)
                                                     .icon(BitmapDescriptorFactory.fromResource( R.drawable.police_marker )));
@@ -355,9 +370,13 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
                                         if(mGoogleMap != null){
 
+                                            //clearPolyline();
+
 
                                             //Toast.makeText( requireContext(), markers.size() + " crime incident found nearby", Toast.LENGTH_SHORT ).show();
                                             mGoogleMap.setInfoWindowAdapter( new GoogleMap.InfoWindowAdapter() {
+
+
 
                                                 @Nullable
                                                 @Override
@@ -371,6 +390,11 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
                                                 @Nullable
                                                 @Override
                                                 public View getInfoWindow(@NonNull Marker marker) {
+
+
+
+
+
                                                     marker.getTitle();
 
 
@@ -383,18 +407,45 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
                                                     PoliceStationData adata = (PoliceStationData) marker.getTag();
 
-                                                    Location crimeLocation = new Location("");
-                                                    crimeLocation.setLatitude( adata.getLatitude() );
-                                                    crimeLocation.setLongitude( adata.getLongitude() );
+                                                    Location stationLocation = new Location("");
+                                                    stationLocation.setLatitude( adata.getLatitude() );
+                                                    stationLocation.setLongitude( adata.getLongitude() );
+
+                                                    Location userLocation = new Location("");
+                                                    userLocation.setLatitude( location.latitude );
+                                                    userLocation.setLongitude( location.longitude );
+
+                                                    LatLng userLoc = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+                                                    LatLng stationLoc = new LatLng(stationLocation.getLatitude(), stationLocation.getLongitude());
 
 
 
-                                                    double distance = (currentLocation.distanceTo(crimeLocation)/1000)*1000;
+                                                    double distance = (userLocation.distanceTo(stationLocation));
                                                     int i = (int) distance;
                                                     String UserToCrime = Integer.toString(i);
 
                                                     stationName.setText( adata.getName() );
                                                     stationDistance.setText( UserToCrime + "m away");
+
+
+                                                    Routing routing = new Routing.Builder()
+                                                            .travelMode( AbstractRouting.TravelMode.WALKING)
+                                                            .withListener(PoliceContactFragment.this)
+                                                            .alternativeRoutes(true)
+                                                            .waypoints(userLoc, stationLoc)
+                                                            .key("AIzaSyAfbGP14EEyceB__hkg5zbOrv5m3iF9vbY")  //also define your api key here.
+                                                            .build();
+                                                    routing.execute();
+
+
+                                                    /*Polyline line = mGoogleMap.addPolyline(new PolylineOptions()
+                                                            .add(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), new LatLng(stationLocation.getLatitude(), stationLocation.getLongitude()))
+                                                            .width(5)
+                                                            .color(Color.RED));*/
+
+                                                    //gMap.addPolyline(polylineOptions);
+
+
 
 
                                                     return view;
@@ -666,12 +717,6 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
             circleOptions.strokeWidth( 0f );
             circleOptions.fillColor( Color.parseColor( "#5B71CCE7" ) );
 
-            /*mGoogleMap.addCircle(new CircleOptions()
-                    .center(latLng)
-                    .radius(radius)
-                    .strokeColor( Color.GREEN)
-                    .strokeWidth(0f)
-                    .fillColor(Color.parseColor("#5B71CCE7")));*/
 
             if(userLocationCircle != null){
                 userLocationMarker.remove();
@@ -685,35 +730,6 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
             userLocationCircle.setCenter(latLng);
         }
 
-
-
-
-
-        /*LatLng latLng = new LatLng( location.getLatitude(), location.getLongitude() );
-        SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
-        HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
-
-
-
-        if (userLocationMarker == null) {
-            //Create a new marker
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position( latLng );
-            markerOptions.icon( bitmapDescriptorFromVector( getContext(), R.drawable.ic_round_location_on_24 ) );
-            markerOptions.snippet( userDetails.get( SessionManager.KEY_FULLNAME ) );
-            mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( latLng, 18f ) );
-
-            if (userLocationMarker != null) {
-                userLocationMarker.remove();
-            }
-
-            userLocationMarker = mGoogleMap.addMarker( markerOptions );
-            userLocationMarker.setTag( 703 );
-        } else {
-            //use the previously created marker
-            userLocationMarker.setPosition( latLng );
-            mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( latLng, 18f ) );
-        }*/
 
     }
 
@@ -853,48 +869,72 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
             }
         } );
 
-        /*checkUser.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("userRoles").getValue(String.class).equals("user")) {
 
-                    Toast.makeText( requireContext(), "For admin user only", Toast.LENGTH_SHORT ).show();
-                }else{
-
-                    Intent intent = new Intent( requireContext(), AddNewCrimeActivity.class );
-                    intent.putExtra( "lat", latLng.latitude );
-                    intent.putExtra( "lng", latLng.longitude );
-                    startActivity( intent );
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d(TAG, error.getMessage());
-            }
-        } );*/
-
-
-
-
-/*
-        Toast.makeText( requireContext(), "location: " + latLng, Toast.LENGTH_SHORT ).show();
-
-        AddNewCrime addNewCrime = new AddNewCrime();
-
-        Bundle bundle = new Bundle();
-        bundle.putDouble( "latitude",latLng.latitude );
-        bundle.putDouble( "longitude",latLng.longitude );
-        addNewCrime.setArguments(bundle);
-
-        addNewCrime.show( getActivity().getSupportFragmentManager(), "AddFragment");
-
- */
 
     }
 
 
+    @Override
+    public void onRoutingFailure(RouteException e) {
+
+        if (e != null) {
+            Toast.makeText( requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG ).show();
+        } else {
+            Toast.makeText( requireContext(), "Something went wrong, Try again", Toast.LENGTH_SHORT ).show();
+        }
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    //If Route finding success
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> arrayList, int shortestRouteIndex) {
+
+        if(polylines!=null) {
+           clearPolyline();
+        }
 
 
+
+        PolylineOptions polyOptions = new PolylineOptions();
+        LatLng polylineStartLatLng = null;
+        LatLng polylineEndLatLng = null;
+
+
+        polylines = new ArrayList<>();
+        //add route(s) to the map using polyline
+        for (int i = 0; i < arrayList.size(); i++) {
+
+            if (i == shortestRouteIndex) {
+                polyOptions.color( getResources().getColor( R.color.colorPrimary ) );
+                polyOptions.width( 7 );
+                polyOptions.addAll( arrayList.get( shortestRouteIndex ).getPoints() );
+                Polyline polyline = mGoogleMap.addPolyline( polyOptions );
+                polylineStartLatLng = polyline.getPoints().get( 0 );
+                int k = polyline.getPoints().size();
+                polylineEndLatLng = polyline.getPoints().get( k - 1 );
+                polylines.add( polyline );
+
+            }
+
+        }
+
+
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+
+    private void clearPolyline(){
+
+        for(Polyline line: polylines){
+            line.remove();
+        }
+        polylines.clear();
+    }
 }

@@ -1,6 +1,6 @@
 package com.capstone.pasigsafety.Constant;
 
-import com.capstone.pasigsafety.Utility.PlaceModel;
+
 import com.capstone.pasigsafety.R;
 
 import java.util.ArrayList;
@@ -14,13 +14,7 @@ public interface AllConstant {
     String IMAGE_PATH = "/Profile/image_profile.jpg";
 
 
-    ArrayList<PlaceModel> placesName = new ArrayList<>(
-            Collections.singletonList(
-                    new PlaceModel( 1, R.drawable.police_icon, "police", "police" )
 
-
-            )
-    );
 
 
 

@@ -46,9 +46,10 @@ import android.widget.Toast;
 import com.capstone.pasigsafety.Adapter.Crime;
 import com.capstone.pasigsafety.Admin.AddNewCrimeActivity;
 import com.capstone.pasigsafety.Admin.FireStoreData;
+import com.capstone.pasigsafety.Common.LoadingDialog;
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.R;
-import com.capstone.pasigsafety.Utility.LoadingDialog;
+
 import com.capstone.pasigsafety.databinding.FragmentMainHomeBinding;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -407,14 +408,10 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
                                                     data.getIcon(), "drawable",
                                                     getActivity() .getPackageName());
 
-
-
                                             //bitmapDescriptor for marker using filename
                                             BitmapDescriptor crime_icon = BitmapDescriptorFactory.fromResource(resourceID);
 
                                             LatLng latLng = new LatLng(latitude,longitude);
-
-
 
 
                                             Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)
@@ -424,17 +421,6 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
                                             marker.setTag(details);
 
                                         }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -477,9 +463,14 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
                                                     crimeLocation.setLatitude( adata.getLatitude() );
                                                     crimeLocation.setLongitude( adata.getLongitude() );
 
+                                                    Location userLocation = new Location("");
+                                                    userLocation.setLatitude( location.latitude );
+                                                    userLocation.setLongitude( location.longitude );
 
 
-                                                    double distance = (currentLocation.distanceTo(crimeLocation)/1000)*1000;
+
+                                                    double distance = (userLocation.distanceTo(crimeLocation));
+
                                                     int i = (int) distance;
                                                     String UserToCrime = Integer.toString(i);
 
@@ -674,6 +665,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
         mGoogleMap.getUiSettings().setTiltGesturesEnabled( true );
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled( false );
 
+
     }
 
     private void zoomToUserLocation() {
@@ -745,6 +737,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
             if (mGoogleMap != null) {
                  setUserLocationCircle(locationResult.getLastLocation());
             }
+
+
 
 
         }
