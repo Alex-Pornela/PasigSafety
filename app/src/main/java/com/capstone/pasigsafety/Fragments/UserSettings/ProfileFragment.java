@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
@@ -24,12 +25,19 @@ import com.capstone.pasigsafety.Adapter.CrimeAdapter;
 import com.capstone.pasigsafety.Admin.FireStoreData;
 import com.capstone.pasigsafety.Common.LoginSignup.Login;
 import com.capstone.pasigsafety.Databases.SessionManager;
+import com.capstone.pasigsafety.Databases.UserHelperClass;
 import com.capstone.pasigsafety.R;
+import com.capstone.pasigsafety.User.EditUserProfile;
 import com.capstone.pasigsafety.databinding.CrimeTypeItemBinding;
 import com.capstone.pasigsafety.databinding.FragmentAdminBinding;
 import com.capstone.pasigsafety.databinding.FragmentProfileBinding;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,6 +70,14 @@ public class ProfileFragment extends Fragment {
             }
         } );
 
+        binding.userInfo.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent( requireActivity(), EditUserProfile.class));
+                requireActivity().finish();
+            }
+        } );
+
 
 
         binding.logBtn.setOnClickListener( new View.OnClickListener() {
@@ -85,7 +101,7 @@ public class ProfileFragment extends Fragment {
     private void setUserInfo() {
 
 
-        SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
+        /*SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
         HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
 
         String female = "female_icon";
@@ -114,9 +130,58 @@ public class ProfileFragment extends Fragment {
         int resourceID = getResources().getIdentifier(
                 userDetails.get(SessionManager.KEY_GENDER), "drawable",
                 getActivity() .getPackageName());
+*/
 
-        binding.userFullName.setText( userDetails.get( SessionManager.KEY_FULLNAME ) );
-        binding.userEmail.setText( userDetails.get( SessionManager.KEY_EMAIL ) );
+        SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
+        HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
+
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
+        DatabaseReference reference = rootNode.getReference( "Users" ).child( userDetails.get( SessionManager.KEY_PHONENUMBER ) );
+        reference.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                UserHelperClass data = snapshot.getValue(UserHelperClass.class);
+
+                String female = "female_icon";
+                String male = "male_icon";
+                String gender = data.getGender();
+
+
+                if(gender.equals( "Female" ) || gender.equals( "female" )){
+
+                    int resourceID = getResources().getIdentifier(
+                            female, "drawable",
+                            getActivity() .getPackageName());
+
+                    binding.userAvatar.setImageResource( resourceID );
+
+                }
+                if(gender.equals( "Male" ) || gender.equals( "male" )){
+
+                    int resourceID = getResources().getIdentifier(
+                            male, "drawable",
+                            getActivity() .getPackageName());
+
+                    binding.userAvatar.setImageResource( resourceID );
+                }
+
+
+
+                String fullName = data.getFullName();
+                String phoneNo = data.getPhoneNo();
+
+                binding.userFullName.setText( fullName );
+                binding.userEmail.setText( phoneNo );
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        } );
+
+
 
 
 
