@@ -1,8 +1,5 @@
 package com.capstone.pasigsafety.Fragments.UserSettings;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,41 +7,22 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
-import com.capstone.pasigsafety.Adapter.Crime;
-import com.capstone.pasigsafety.Adapter.CrimeAdapter;
-import com.capstone.pasigsafety.Admin.FireStoreData;
 import com.capstone.pasigsafety.Common.LoginSignup.Login;
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.Databases.UserHelperClass;
-import com.capstone.pasigsafety.R;
 import com.capstone.pasigsafety.User.EditUserProfile;
-import com.capstone.pasigsafety.databinding.CrimeTypeItemBinding;
-import com.capstone.pasigsafety.databinding.FragmentAdminBinding;
 import com.capstone.pasigsafety.databinding.FragmentProfileBinding;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 
 public class ProfileFragment extends Fragment {
@@ -53,6 +31,7 @@ public class ProfileFragment extends Fragment {
 
 
 
+    @SuppressWarnings( "deprecation" )
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,7 +44,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
 
                 Intent viewIntent = new Intent("android.intent.action.VIEW",
-                                Uri.parse("https://youtu.be/vzjUs5yR68o?t=3"));
+                                Uri.parse("https://docs.google.com/forms/d/e/1FAIpQLScC_qRRdqEuWTLe9p7NauFQnJG_WmMDDyyOXsySxzZ5g0ELJQ/viewform"));
                 startActivity(viewIntent);
             }
         } );
@@ -73,8 +52,14 @@ public class ProfileFragment extends Fragment {
         binding.userInfo.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 startActivity(new Intent( requireActivity(), EditUserProfile.class));
                 requireActivity().finish();
+
+               /* UserProfile fragment = new UserProfile();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace( R.id.content_frame, fragment );
+                transaction.commit();*/
             }
         } );
 
@@ -95,8 +80,17 @@ public class ProfileFragment extends Fragment {
 
 
 
+
+
         return binding.getRoot();
     }
+
+    public boolean isAttachedToActivity() {
+        boolean attached = isVisible() && getActivity() != null;
+        return attached;
+    }
+
+
 
     private void setUserInfo() {
 
@@ -147,24 +141,27 @@ public class ProfileFragment extends Fragment {
                 String male = "male_icon";
                 String gender = data.getGender();
 
+                if (isAttachedToActivity()){
+                    if(gender.equals( "Female" ) || gender.equals( "female" )){
 
-                if(gender.equals( "Female" ) || gender.equals( "female" )){
+                        int resourceID = getResources().getIdentifier(
+                                female, "drawable",
+                                getActivity() .getPackageName());
 
-                    int resourceID = getResources().getIdentifier(
-                            female, "drawable",
-                            getActivity() .getPackageName());
+                        binding.userAvatar.setImageResource( resourceID );
 
-                    binding.userAvatar.setImageResource( resourceID );
+                    }
+                    if(gender.equals( "Male" ) || gender.equals( "male" )){
+
+                        int resourceID = getResources().getIdentifier(
+                                male, "drawable",
+                                getActivity() .getPackageName());
+
+                        binding.userAvatar.setImageResource( resourceID );
+                    }
 
                 }
-                if(gender.equals( "Male" ) || gender.equals( "male" )){
 
-                    int resourceID = getResources().getIdentifier(
-                            male, "drawable",
-                            getActivity() .getPackageName());
-
-                    binding.userAvatar.setImageResource( resourceID );
-                }
 
 
 

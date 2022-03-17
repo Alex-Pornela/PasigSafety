@@ -48,6 +48,7 @@ import com.capstone.pasigsafety.Admin.AddNewCrimeActivity;
 import com.capstone.pasigsafety.Admin.FireStoreData;
 import com.capstone.pasigsafety.Common.LoadingDialog;
 import com.capstone.pasigsafety.Databases.SessionManager;
+import com.capstone.pasigsafety.Databases.UserHelperClass;
 import com.capstone.pasigsafety.R;
 
 import com.capstone.pasigsafety.databinding.FragmentMainHomeBinding;
@@ -134,6 +135,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
     private List<Crime> crimes;
     private LocationManager mLocationManager;
     LocationListener mLocationListeners;
+    String userRoles;
 
 
     @SuppressLint("MissingPermission")
@@ -228,30 +230,74 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
             @Override
             public void onClick(View v) {
 
-                dialog = new Dialog( requireContext() );
+                SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
+                HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
 
-                dialog.setContentView( R.layout.admin_update_dialog );
-                dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
 
-                ImageView closeDialog = dialog.findViewById( R.id.dialog_close );
-                Button okDialogBtn = dialog.findViewById( R.id.dialog_ok_btn );
 
-                closeDialog.setOnClickListener( new View.OnClickListener() {
+                FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
+                DatabaseReference reference = rootNode.getReference( "Users" );
+                Query checkUser = reference.child( userDetails.get( SessionManager.KEY_PHONENUMBER ) );
+
+                checkUser.addListenerForSingleValueEvent( new ValueEventListener() {
                     @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        if(snapshot.child("userRoles").getValue(String.class).equals("user")) {
+
+                            dialog = new Dialog( requireContext() );
+
+                            dialog.setContentView( R.layout.not_authorize_dialog );
+                            dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+
+                            Button okDialogBtn = dialog.findViewById( R.id.okay_btn );
+
+                            okDialogBtn.setOnClickListener( new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            } );
+
+
+                            dialog.show();
+                        }else{
+
+                            dialog = new Dialog( requireContext() );
+
+                            dialog.setContentView( R.layout.admin_update_dialog );
+                            dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+
+                            ImageView closeDialog = dialog.findViewById( R.id.dialog_close );
+                            Button okDialogBtn = dialog.findViewById( R.id.dialog_ok_btn );
+
+                            closeDialog.setOnClickListener( new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            } );
+
+                            okDialogBtn.setOnClickListener( new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            } );
+
+
+                            dialog.show();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d(TAG, error.getMessage());
                     }
                 } );
 
-                okDialogBtn.setOnClickListener( new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                } );
-
-
-                dialog.show();
 
             }
         } );
@@ -262,6 +308,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
 
         return binding.getRoot();
     }
+
+
 
 
     public boolean isAttachedToActivity() {
@@ -938,7 +986,22 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
 
                 if(snapshot.child("userRoles").getValue(String.class).equals("user")) {
 
-                    Toast.makeText( requireContext(), "For admin user only", Toast.LENGTH_SHORT ).show();
+                    dialog = new Dialog( requireContext() );
+
+                    dialog.setContentView( R.layout.not_authorize_dialog );
+                    dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+
+                    Button okDialogBtn = dialog.findViewById( R.id.okay_btn );
+
+                    okDialogBtn.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    } );
+
+
+                    dialog.show();
                 }else{
 
                     Intent intent = new Intent( requireContext(), AddNewCrimeActivity.class );
@@ -956,44 +1019,11 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
             }
         } );
 
-        /*checkUser.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("userRoles").getValue(String.class).equals("user")) {
-
-                    Toast.makeText( requireContext(), "For admin user only", Toast.LENGTH_SHORT ).show();
-                }else{
-
-                    Intent intent = new Intent( requireContext(), AddNewCrimeActivity.class );
-                    intent.putExtra( "lat", latLng.latitude );
-                    intent.putExtra( "lng", latLng.longitude );
-                    startActivity( intent );
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d(TAG, error.getMessage());
-            }
-        } );*/
 
 
 
 
-/*
-        Toast.makeText( requireContext(), "location: " + latLng, Toast.LENGTH_SHORT ).show();
 
-        AddNewCrime addNewCrime = new AddNewCrime();
-
-        Bundle bundle = new Bundle();
-        bundle.putDouble( "latitude",latLng.latitude );
-        bundle.putDouble( "longitude",latLng.longitude );
-        addNewCrime.setArguments(bundle);
-
-        addNewCrime.show( getActivity().getSupportFragmentManager(), "AddFragment");
-
- */
 
     }
 
