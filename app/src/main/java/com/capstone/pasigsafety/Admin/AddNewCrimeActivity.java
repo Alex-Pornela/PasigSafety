@@ -6,7 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -17,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,6 +30,8 @@ import android.widget.Toast;
 import com.capstone.pasigsafety.Adapter.Crime;
 import com.capstone.pasigsafety.Adapter.CrimeAdapter;
 import com.capstone.pasigsafety.R;
+import com.capstone.pasigsafety.User.EditUserProfile;
+import com.capstone.pasigsafety.User.UserDashboard;
 import com.capstone.pasigsafety.databinding.ActivityAddNewCrimeBinding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -60,7 +67,6 @@ public class AddNewCrimeActivity extends AppCompatActivity {
     private String crimeIcon;
     private String icon;
     private int hour, minute;
-    FirebaseFirestore db;
     String item;
     private ArrayList<String> crimeTypes;
     private double latitude;
@@ -68,8 +74,7 @@ public class AddNewCrimeActivity extends AppCompatActivity {
     String brgy,street,date,time;
     private ArrayAdapter<FireStoreData> adapter;
     private DatabaseReference databaseReference;
-    Uri uri;
-    StorageReference storageReference;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +212,15 @@ public class AddNewCrimeActivity extends AppCompatActivity {
             }
         } );
 
+        binding.backArrow.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( AddNewCrimeActivity.this, UserDashboard.class );
+                startActivity( intent );
+                finish();
+            }
+        } );
+
 
     }
 
@@ -245,7 +259,26 @@ public class AddNewCrimeActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
 
-                Toast.makeText( AddNewCrimeActivity.this, "Successfully Added:", Toast.LENGTH_SHORT ).show();
+                dialog = new Dialog( AddNewCrimeActivity.this );
+
+                dialog.setContentView( R.layout.crime_add_layout );
+                dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+
+
+                Button okDialogBtn = dialog.findViewById( R.id.crime_ok_btn );
+
+
+                okDialogBtn.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent( AddNewCrimeActivity.this, UserDashboard.class );
+                        startActivity( intent );
+                        finish();
+                    }
+                } );
+
+
+                dialog.show();
             }
         } );
     }

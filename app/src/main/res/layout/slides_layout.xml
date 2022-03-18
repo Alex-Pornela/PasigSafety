@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:background="#3a4348"
     tools:context=".HelperClasses.SliderAdapter">
 
     <ImageView
@@ -12,28 +13,31 @@
         android:layout_width="400dp"
         android:layout_height="400dp"
         android:padding="20dp"
-        android:src="@drawable/sit_back_and_relax" />
+        android:src="@drawable/first_slide" />
 
     <TextView
         android:id="@+id/slider_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/brandon_grotesque_black"
+        android:layout_below="@id/slider_image"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/teko_medium"
         android:gravity="center"
         android:text="@string/first_slide_title"
-        android:textSize="36sp"
-        android:layout_below="@id/slider_image"
-        android:layout_centerInParent="true"/>
+        android:textColor="@color/white"
+        android:textSize="40sp" />
 
     <TextView
         android:id="@+id/slider_description"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_below="@id/slider_heading"
+        android:fontFamily="@font/muli_semibold"
         android:padding="10dp"
         android:text="@string/first_slide_description"
-        android:textSize="14sp"
-        android:layout_below="@id/slider_heading"/>
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
 
 </RelativeLayout>

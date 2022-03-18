@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/</item>
+        <item>@font/bebas_neue</item>
+        <item>@font/montserrat_subrayada</item>
         <item>@font/muli</item>
         <item>@font/muli_black</item>
         <item>@font/muli_semibold</item>
+        <item>@font/teko</item>
+        <item>@font/teko_bold</item>
+        <item>@font/teko_light</item>
+        <item>@font/teko_medium</item>
+        <item>@font/teko_semibold</item>
     </array>
 </resources>

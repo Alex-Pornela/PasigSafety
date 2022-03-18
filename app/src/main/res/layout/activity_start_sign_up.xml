@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Common.LoginSignup.SignUp"
-    android:background="@color/yellow"
+    android:background="@color/white"
     android:padding="30dp"
     android:transitionName="transition_signup">
 
@@ -37,11 +37,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:fontFamily="@font/muli_black"
+                android:fontFamily="@font/teko_semibold"
                 android:text="@string/create_account"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
-                android:textSize="40sp"
+                android:textSize="33sp"
                 android:transitionName="transition_title_text" />
 
 
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="60dp">
+            android:layout_marginTop="40dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/signup_fullname"
@@ -186,6 +186,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/next"
+            android:fontFamily="@font/teko_semibold"
+            android:textSize="20dp"
             android:background="@color/black"
             android:onClick="callNextSignupScreen"
             android:layout_marginTop="20dp"
@@ -199,9 +201,10 @@
             android:layout_height="wrap_content"
             android:text="@string/login"
             android:background="#00000000"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:textColor="@color/black"
-            android:fontFamily="@font/muli"
+            android:fontFamily="@font/teko_semibold"
+            android:textSize="20dp"
             android:onClick="callLoginFromSignUp"
             android:elevation="5dp"
             android:transitionName="transition_login_btn"/>

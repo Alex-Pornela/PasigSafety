@@ -803,14 +803,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
             circleOptions.radius( radius );
             circleOptions.strokeColor( Color.GREEN );
             circleOptions.strokeWidth( 0f );
-            circleOptions.fillColor( Color.parseColor( "#5B71CCE7" ) );
+            circleOptions.fillColor( Color.parseColor( "#202196F3" ) );
 
-            /*mGoogleMap.addCircle(new CircleOptions()
-                    .center(latLng)
-                    .radius(radius)
-                    .strokeColor( Color.GREEN)
-                    .strokeWidth(0f)
-                    .fillColor(Color.parseColor("#5B71CCE7")));*/
 
             if(userLocationCircle != null){
                 userLocationMarker.remove();

@@ -5,15 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activity.IntroScreen"
-    android:background="@color/yellow">
+    android:background="#3a4348">
 
     <ImageView
         android:id="@+id/background_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/logo_bg"
-        app:layout_editor_absoluteY="0dp"
-        app:layout_editor_absoluteX="0dp"/>
+        android:padding="20dp"
+        android:src="@drawable/logo_ps"
+        android:layout_marginBottom="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.41"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01999998" />
 
     <TextView
         android:id="@+id/pasig_safety"
@@ -22,9 +28,10 @@
         android:layout_marginStart="110dp"
         android:layout_marginEnd="111dp"
         android:layout_marginBottom="8dp"
-        android:fontFamily="@font/brandon_grotesque_bold_italic"
+        android:textSize="20sp"
+        android:fontFamily="@font/teko_semibold"
         android:text="@string/pasig_safety"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/background_image"
         app:layout_constraintHorizontal_bias="0.505"

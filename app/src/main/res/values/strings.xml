@@ -8,7 +8,7 @@
     <!--Title-->
     <string name="first_slide_title">Pasig Safety</string>
     <string name="second_slide_title">Crime Spot</string>
-    <string name="third_slide_title">Police Station</string>
+    <string name="third_slide_title">Nearby Police Station</string>
 
     <!--Pasigsafety googleaccount <string name="API_KEY">AIzaSyCLy0pBjCXHYXWYBzi3y8gRsp5TcJa2Mbo</string>-->
     <!--Marte gmail-->
@@ -18,7 +18,7 @@
     <!--Description-->
     <string name="first_slide_description">A Crime Evaluator application used to analyze, map and visualize crime incidents.</string>
     <string name="second_slide_description">Easily locate and identify crime on the map!</string>
-    <string name="third_slide_description">You may contact the police if you have any information about the crime.</string>
+    <string name="third_slide_description">You can spot the nearest police station.</string>
 
     <!--Buttons-->
     <string name="skip_btn">Skip</string>

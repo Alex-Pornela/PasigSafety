@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".User.UserDashboard"
     android:id="@+id/fragment_container"
-    android:background="@color/lightWhite">
+    android:background="@color/gray">
 
     <com.ismaeldivita.chipnavigation.ChipNavigationBar
         android:id="@+id/bottom_nav_menu"
@@ -17,7 +17,7 @@
         android:background="@drawable/round_corner"
         app:cnb_unselectedColor="@color/black"
         app:cnb_radius="8dp"
-        app:cnb_textAppearance="@color/black"
+        app:cnb_textAppearance="@color/white"
         app:cnb_orientationMode="horizontal"
         android:layout_margin="30dp"
         android:elevation="8dp"/>

@@ -70,7 +70,7 @@ public class OnBoarding extends AppCompatActivity {
     // adding dots
     private void addDots(int position){
 
-        dots = new TextView[4];
+        dots = new TextView[3];
         dots_layout.removeAllViews();
 
         for(int i=0; i<dots.length; i++){
@@ -102,8 +102,6 @@ public class OnBoarding extends AppCompatActivity {
             if (position == 0) {
                 letsGetStarted.setVisibility(View.INVISIBLE);
             } else if (position == 1) {
-                letsGetStarted.setVisibility(View.INVISIBLE);
-            } else if (position == 2) {
                 letsGetStarted.setVisibility(View.INVISIBLE);
             } else {
                 animation = AnimationUtils.loadAnimation(OnBoarding.this, R.anim.bottom_animation);

@@ -11,39 +11,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
         android:orientation="vertical">
         
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/logo_bg"/>
+            android:src="@drawable/logo_pasig"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/muli_black"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/teko_semibold"
             android:text="@string/startup_heading"
-            android:textColor="@color/black"
-            android:textSize="36sp"
             android:textAllCaps="true"
-            android:layout_marginTop="120dp"/>
+            android:textColor="@color/black"
+            android:textSize="40sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/muli"
+            android:fontFamily="@font/muli_semibold"
             android:text="@string/startup_tagline"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="90dp">
 
             <Button
                 android:id="@+id/login_btn"
@@ -52,11 +53,12 @@
                 android:layout_weight="1"
                 android:onClick="callLoginScreen"
                 android:layout_marginRight="10dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/brandon_grotesque_black"
-                android:background="@color/yellow"
-                app:backgroundTint="@color/yellow"
+                android:textColor="@color/white"
+                android:fontFamily="@font/teko_semibold"
+                android:background="@color/black"
+                app:backgroundTint="@color/black"
                 android:text="@string/login"
+                android:textSize="20dp"
                 tools:ignore="ButtonStyle"
                 android:transitionName="transition_login"/>
 
@@ -65,12 +67,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/black"
-                android:fontFamily="@font/brandon_grotesque_black"
+                android:textColor="@color/white"
+                android:fontFamily="@font/teko_semibold"
                 android:layout_marginLeft="10dp"
+                android:textSize="20dp"
                 android:onClick="callSignUpScreen"
                 android:background="@color/yellow"
-                app:backgroundTint="@color/yellow"
+                app:backgroundTint="@color/black"
                 android:text="@string/sign_up"
                 android:transitionName="transition_signup"/>
 

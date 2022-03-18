@@ -353,7 +353,6 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
                                     public void onKeyEntered(String key, GeoLocation location) {
 
 
-                                        Toast.makeText( requireContext(), "location: "+location, Toast.LENGTH_SHORT ).show();
 
                                         if (isAttachedToActivity()){
 
@@ -651,7 +650,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
                 markerOptions.position( latLng );
                 markerOptions.icon( bitmapDescriptorFromVector( getContext(), R.drawable.ic_round_location_on_24 ) );
                 markerOptions.snippet( userDetails.get( SessionManager.KEY_FULLNAME ) );*/
-                mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( latLng, 15.5f ) );
+                mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( latLng, 14 ) );
                 /*mGoogleMap.addCircle(new CircleOptions()
                         .center(latLng)
                         .radius(radius)
@@ -715,7 +714,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
             circleOptions.radius( radius );
             circleOptions.strokeColor( Color.GREEN );
             circleOptions.strokeWidth( 0f );
-            circleOptions.fillColor( Color.parseColor( "#5B71CCE7" ) );
+            circleOptions.fillColor( Color.parseColor( "#202196F3" ) );
 
 
             if(userLocationCircle != null){
@@ -799,7 +798,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
             Log.i( "mytag", "Place found: " + place.getName() );
             LatLng latLngOfPlace = place.getLatLng();
             if (latLngOfPlace != null) {
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( latLngOfPlace, 18f );
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( latLngOfPlace, 15f );
 
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position( latLngOfPlace )
