@@ -71,7 +71,7 @@ public class AddNewCrimeActivity extends AppCompatActivity {
     private ArrayList<String> crimeTypes;
     private double latitude;
     private double longitude;
-    String brgy,street,date,time;
+    String brgy,street,date,time,monthCrime;
     private ArrayAdapter<FireStoreData> adapter;
     private DatabaseReference databaseReference;
     Dialog dialog;
@@ -110,7 +110,10 @@ public class AddNewCrimeActivity extends AppCompatActivity {
                         calendar.set( Calendar.DAY_OF_MONTH, day );
 
                         String myFormat = "MMM d, yyyy"; // In which you need put here
+                        String monthFormat = "MMM";
                         SimpleDateFormat sdf = new SimpleDateFormat( myFormat, Locale.US );
+                        SimpleDateFormat sddf = new SimpleDateFormat( monthFormat, Locale.US );
+                        monthCrime= sddf.format( calendar.getTime() );
 
                         binding.selectDate.setText( sdf.format( calendar.getTime() ) );
                     }
@@ -237,6 +240,7 @@ public class AddNewCrimeActivity extends AppCompatActivity {
         date = binding.selectDate.getText().toString();
         time = binding.selectTime.getText().toString();
         String crimeIcon = icon;
+        String monthBrgy = monthCrime + brgy;
 
        Geocoder gcd = new Geocoder(AddNewCrimeActivity.this, Locale.getDefault());
         List<Address> addresses;
@@ -248,7 +252,7 @@ public class AddNewCrimeActivity extends AppCompatActivity {
         }
 
         Map<String, Object> crimetype = new HashMap<>();
-        FireStoreData data = new FireStoreData( brgy, street, date, time, latitude, longitude, item,icon+"_marker", crimeIcon);
+        FireStoreData data = new FireStoreData( brgy, street, date, time, latitude, longitude, item,icon+"_marker", crimeIcon, monthBrgy);
         //crimetype.put(data);
 
 

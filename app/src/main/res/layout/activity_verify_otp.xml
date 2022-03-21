@@ -38,9 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/otp_verification_text"
-            android:textSize="24sp"
+            android:textSize="32sp"
             android:textColor="@color/black"
-            android:fontFamily="@font/muli_black"
+            android:fontFamily="@font/teko_semibold"
             android:textAllCaps="true"
             android:textAlignment="center"
             android:includeFontPadding="false"
@@ -83,11 +83,13 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/yellow"
+            android:background="@color/black"
             android:text="@string/otp_verify_code"
             android:layout_marginTop="30dp"
             android:onClick="callNextScreenFromOTP"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
+            android:fontFamily="@font/teko_semibold"
+            android:textSize="20dp"
             android:transitionName="transition_OTP_screen"/>
 
 

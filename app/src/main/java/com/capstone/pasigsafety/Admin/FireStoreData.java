@@ -10,13 +10,14 @@ import com.google.firebase.database.PropertyName;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.protobuf.Any;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class FireStoreData  {
+public class FireStoreData implements Serializable {
 
     private String brgy;
     private String street;
@@ -27,6 +28,7 @@ public class FireStoreData  {
     private String item;
     private String icon;
     private String crimeIcon;
+    private String monthBrgy;
 
 
 
@@ -37,7 +39,7 @@ public class FireStoreData  {
 
 
 
-    public FireStoreData(String brgy, String street, String date, String time, Double latitude, Double longitude,String item,String icon,String crimeIcon) {
+    public FireStoreData(String brgy, String street, String date, String time, Double latitude, Double longitude,String item,String icon,String crimeIcon,String monthBrgy) {
         this.brgy = brgy;
         this.street = street;
         this.date = date;
@@ -47,6 +49,7 @@ public class FireStoreData  {
         this.item = item;
         this.icon= icon;
         this.crimeIcon= crimeIcon;
+        this.monthBrgy= monthBrgy;
 
     }
 
@@ -123,5 +126,13 @@ public class FireStoreData  {
 
     public void setCrimeIcon(String crimeIcon) {
         this.crimeIcon = crimeIcon;
+    }
+
+    public String getMonthBrgy() {
+        return monthBrgy;
+    }
+
+    public void setMonthBrgy(String monthBrgy) {
+        this.monthBrgy = monthBrgy;
     }
 }

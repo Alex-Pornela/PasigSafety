@@ -20,20 +20,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PasigSafety">
         <activity
-            android:name=".User.EditUserProfile"
+            android:name=".User.CrimeDetails"
             android:exported="false" />
+        <activity
+            android:name=".User.EditUserProfile"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Admin.AddNewCrimeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".User.ChangePasswordSucces"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".User.ChangePassword"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.IntroScreen"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,46 +51,60 @@
         <activity
             android:name=".Activity.Dashboard"
             android:exported="false"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.ForgetPasswordSuccessMessage"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.SetNewPassword"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.MakeSelection"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.ForgetPassword"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.VerifyOTP"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.Signup3rdClass"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.Signup2ndClass"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.SignUp"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.Login"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.LoginSignup.StartUpScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.OnBoarding"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".User.UserDashboard"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Common.SplashScreen"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="preloaded_fonts"

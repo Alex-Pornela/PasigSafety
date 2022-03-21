@@ -87,6 +87,10 @@
 
 
     <string name="drug_addicts">Drug Addicts</string>
+    <string name="robberyPrecautions">Keep your phones in your pocket\'s robbers could be anywhere!</string>
+    <string name="physicalInjuryPrecautions">Please avoid going in dark places if you are alone!</string>
+    <string name="precautions">The crime in this area is </string>
+    <string name="secondLinePrecautions">Be aware of your surroundings and check nearest police station if needed.</string>
 
 
     <!--For Crime Type Array-->

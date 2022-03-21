@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Common.LoginSignup.Signup3rdClass"
-    android:background="@color/yellow"
+    android:background="@color/white"
     android:id="@+id/signup_3rd_screen_scroll_view"
     android:transitionName="transition_OTP_screen"
     android:padding="30dp">
@@ -38,11 +38,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:fontFamily="@font/muli_black"
+                android:fontFamily="@font/teko_semibold"
                 android:text="@string/create_account"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
-                android:textSize="40sp"
+                android:textSize="33sp"
                 android:transitionName="transition_title_text" />
 
 
@@ -120,6 +120,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/next"
+            android:fontFamily="@font/teko_semibold"
+            android:textSize="20dp"
             android:background="@color/black"
             android:onClick="callOTPVerification"
             android:layout_marginTop="20dp"
@@ -134,9 +136,10 @@
             android:text="@string/login"
             android:onClick="callLoginFromSignUp"
             android:background="#00000000"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:textColor="@color/black"
-            android:fontFamily="@font/muli"
+            android:fontFamily="@font/teko_semibold"
+            android:textSize="20dp"
             android:elevation="5dp"
             android:transitionName="transition_login_btn"/>
 
