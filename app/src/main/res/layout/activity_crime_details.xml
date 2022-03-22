@@ -81,6 +81,8 @@
             android:textSize="15sp" />
 
 
+
+
     </LinearLayout>
 
 
@@ -98,6 +100,22 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/month_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/teko_semibold"
+                android:text="Jan 2022"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.184"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.085" />
 
             <RelativeLayout
                 android:id="@+id/relativeLayout3"
@@ -150,6 +168,7 @@
                     android:textColor="@color/black"
                     android:textSize="10sp" />
 
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -186,7 +205,7 @@
                 app:layout_constraintHorizontal_bias="0.23"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.57">
+                app:layout_constraintVertical_bias="0.51">
 
                 <TextView
                     android:id="@+id/crime_details"
@@ -245,7 +264,7 @@
 
             </LinearLayout>
 
-
+            <!--
             <TextView
                 android:id="@+id/precautions"
                 android:layout_width="250dp"
@@ -260,7 +279,37 @@
                 app:layout_constraintHorizontal_bias="0.496"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.827" />
+                app:layout_constraintVertical_bias="0.827" />-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/teko_semibold"
+                    android:text="Safety Precautions:"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+
+                <ListView
+                    android:id="@+id/precautions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:divider="@null" />
+
+
+            </LinearLayout>
+
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

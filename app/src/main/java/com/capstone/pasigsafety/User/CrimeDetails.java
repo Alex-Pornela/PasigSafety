@@ -9,9 +9,12 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.capstone.pasigsafety.Adapter.Crime;
 import com.capstone.pasigsafety.Admin.FireStoreData;
 import com.capstone.pasigsafety.R;
 import com.capstone.pasigsafety.databinding.ActivityCrimeDetailsBinding;
@@ -27,46 +30,44 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class CrimeDetails extends AppCompatActivity {
 
     private ActivityCrimeDetailsBinding binding;
+    private String userPosition;
+    private DatabaseReference ref;
+    private String brgy,monthBrgy,month,year;
+    private long numbers;
+    ArrayList<String> listItems = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
 
-    String userPosition;
-    DatabaseReference ref;
-    String brgy;
-    long numbers;
-
-
-
-
-
-    //private TextView count, place;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        //setContentView( R.layout.activity_crime_details );
+
 
         binding = ActivityCrimeDetailsBinding.inflate( getLayoutInflater() );
         setContentView( binding.getRoot() );
         
         ref = FirebaseDatabase.getInstance().getReference();
 
-        /*count = findViewById(R.id.number);
-        place = findViewById(R.id.place);*/
-
 
         Intent i = getIntent();
         FireStoreData  data = (FireStoreData) i.getSerializableExtra("data");
 
 
-        //int crimeNumber = getIntent().getIntExtra( "numberCrime", 0 );
+
+
+
         int distance = getIntent().getIntExtra( "distanceCrime", 0 );
         double lat = getIntent().getDoubleExtra( "userLatitude", 0 );
         double lng = getIntent().getDoubleExtra( "userLongitude", 0 );
@@ -88,17 +89,35 @@ public class CrimeDetails extends AppCompatActivity {
         String date = data.getDate();
         String time = data.getTime();
         String crimeDistance = String.valueOf( distance );
-        brgy = data.getMonthBrgy();
+        monthBrgy = data.getMonthBrgy();
+        brgy = data.getBrgy();
+
+        final Calendar calendar = Calendar.getInstance();
+        String myFormat = "LLL d, yyyy";
+        String format = "MMM";
+        SimpleDateFormat sdf = new SimpleDateFormat( myFormat, Locale.US );
+        SimpleDateFormat sdff = new SimpleDateFormat(format, Locale.US );
+
+        try {
+            calendar.setTime( Objects.requireNonNull( sdf.parse( date ) ) );
+            month= sdff.format( calendar.getTime() );
+            //month = String.valueOf( calendar.get( Calendar.MONTH ) );
+            year = String.valueOf( calendar.get( Calendar.YEAR ) );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
 
+
+
+        binding.monthRate.setText( month + " " + year );
         binding.userLocation.setText( userPosition );
         binding.crimeType.setText( crimeType );
         binding.placeOccurence.setText( placeCrime );
         binding.date.setText( date );
         binding.time.setText( time );
-        binding.distance.setText( crimeDistance + " away from you location" );
-        //binding.crimeNumber.setText( number );
+        binding.distance.setText( crimeDistance + " m away from you location" );
 
 
         binding.backArrow.setOnClickListener( new View.OnClickListener() {
@@ -110,79 +129,60 @@ public class CrimeDetails extends AppCompatActivity {
             }
         } );
 
-        setCrimeRange( numbers );
 
-        setPrecautions(crimeType);
-
-
-        //for crime rate
-        if(numbers <=5){
-            //25% safe
-            startAnimationCounter( 0,25 );
-        }
-        else if (numbers>5 && numbers<=10){
-            //50% Moderately Safe
-            startAnimationCounter( 0,50 );
-        }
-        else if (numbers>10 && numbers<=15){
-            //75% Dangerous
-            startAnimationCounter( 0,75 );
-        }
-        else if (numbers>15 && numbers<=20){
-            //100% Extremely
-            startAnimationCounter( 0,100 );
-        }
-        
-        if(data.getBrgy().equals( "Palatiw" )){
-            getCrimeRate();
-        }
-
-
+        getCrimeRate(brgy,crimeType);
 
 
 
     }
 
-    private void getCrimeRate() {
 
-     /*   ArrayList<String> list = new ArrayList<>();
 
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference robberyRef = db.child( "CrimeReport" );
-        robberyRef.get().addOnCompleteListener( new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DataSnapshot snapshot = task.getResult();
-                    for (DataSnapshot ds : snapshot.getChildren()) {
+    private void getCrimeRate(String brgy, String crimeType) {
 
-                        FireStoreData data = ds.getValue( FireStoreData.class );
-                        String palatiw = "Palatiw";
 
-                        assert data != null;
-                        list.add( String.valueOf( data.getBrgy().equals( "Palatiw" ) && data.getItem().equals( "Robbery" ) ) );
-
-                        String number = String.valueOf( list.size() );
-
-                       binding.crimeNumber.setText( number );
-
-                    }
-                }
-            }
-        } );*/
-
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("MMM");
         String currentMonth = sdf.format(new Date());
 
+
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        Query usersRef = rootRef.child("CrimeReport").orderByChild( "monthBrgy").equalTo( brgy);
+        Query usersRef = rootRef.child("CrimeReport").orderByChild( "monthBrgy").equalTo( monthBrgy);
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
 
-                numbers = snapshot.getChildrenCount();
-                String number = String.valueOf( numbers );
+                long number = snapshot.getChildrenCount();
+
+                numbers = number;
+
+                setCrimeRange();
+
+                setPrecautions(crimeType);
+
+
+                //for crime rate
+                if(numbers <=5){
+                    //25% safe
+                    startAnimationCounter( 0,25 );
+                }
+                else if (numbers>5 && numbers<=10){
+                    //50% Moderately Safe
+                    startAnimationCounter( 0,50 );
+                }
+                else if (numbers>10 && numbers<=15){
+                    //75% Dangerous
+                    startAnimationCounter( 0,75 );
+                }
+                else if (numbers>15 && numbers<=20){
+                    //100% Extremely
+                    startAnimationCounter( 0,100 );
+                }
+
+
+
+
 
 
 
@@ -197,32 +197,45 @@ public class CrimeDetails extends AppCompatActivity {
         };
         usersRef.addListenerForSingleValueEvent(valueEventListener);
 
-       /* ref.child( "CrimeReport" )
-                .orderByChild( "brgy" ).equalTo( "Palatiw" ).get().addOnSuccessListener( new OnSuccessListener<DataSnapshot>() {
-                    @Override
-                    public void onSuccess(DataSnapshot dataSnapshot) {
 
-                        long numbers = dataSnapshot.getChildrenCount();
-                        String number = String.valueOf( numbers );
-
-                        binding.crimeNumber.setText( number );
-
-                    }
-                } );*/
 
     }
 
     private void setPrecautions(String crimeType) {
 
+
+        String[] robbery = getResources().getStringArray( R.array.robbery_precautions );
+
+
+
         if(crimeType.equals( "Robbery" )){
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.custom_list_view, android.R.id.text1, robbery);
+
+            binding.precautions.setDividerHeight( 0 );
+            binding.precautions.setAdapter(adapter);
+        }
+
+        /*ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(this, R.array.robbery_precautions, android.R.layout.activity_list_item);
+        binding.precautions.setAdapter(aa);*/
+
+        /*if(crimeType.equals( "Robbery" )){
             binding.precautions.setText( R.string.robberyPrecautions);
         }else if(crimeType.equals( "Physical Injury" )){
             binding.precautions.setText( R.string.physicalInjuryPrecautions );
-        }
+        }else if(crimeType.equals( "Scam" )) {
+            binding.precautions.setText( R.string.physicalInjuryPrecautions );
+        }else if(crimeType.equals( "Gambling" )) {
+            binding.precautions.setText( R.string.physicalInjuryPrecautions );
+        }else if(crimeType.equals( "Theft" )) {
+            binding.precautions.setText( R.string.physicalInjuryPrecautions );
+        }else if(crimeType.equals( "CarNapping" )) {
+            binding.precautions.setText( R.string.physicalInjuryPrecautions );
+        }*/
     }
 
     @SuppressLint("SetTextI18n")
-    private void setCrimeRange(long crimeNumber) {
+    private void setCrimeRange() {
+
 
         String safe = "Safe";
         String moderate = "Moderately Safe";
@@ -233,7 +246,7 @@ public class CrimeDetails extends AppCompatActivity {
             //25% safe
             binding.safetyRange.setText( safe );
         }
-        else if(numbers>5 && numbers<=10){
+        else if(numbers<=10){
             //50%
             binding.safetyRange.setText( moderate  );
         }
