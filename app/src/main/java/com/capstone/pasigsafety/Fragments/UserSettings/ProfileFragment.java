@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.capstone.pasigsafety.Common.LoginSignup.Login;
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.Databases.UserHelperClass;
+import com.capstone.pasigsafety.User.About;
 import com.capstone.pasigsafety.User.EditUserProfile;
 import com.capstone.pasigsafety.databinding.FragmentProfileBinding;
 import com.google.firebase.database.DataSnapshot;
@@ -56,10 +57,16 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent( requireActivity(), EditUserProfile.class));
                 requireActivity().finish();
 
-               /* UserProfile fragment = new UserProfile();
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.replace( R.id.content_frame, fragment );
-                transaction.commit();*/
+
+            }
+        } );
+
+
+        binding.aboutUs.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent( requireActivity(), About.class));
+                requireActivity().finish();
             }
         } );
 
@@ -80,8 +87,6 @@ public class ProfileFragment extends Fragment {
 
 
 
-
-
         return binding.getRoot();
     }
 
@@ -93,38 +98,6 @@ public class ProfileFragment extends Fragment {
 
 
     private void setUserInfo() {
-
-
-        /*SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
-        HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
-
-        String female = "female_icon";
-        String male = "male_icon";
-        String gender = userDetails.get(SessionManager.KEY_GENDER);
-
-        if(gender.equals( "Female" )){
-
-            int resourceID = getResources().getIdentifier(
-                    female, "drawable",
-                    getActivity() .getPackageName());
-
-            binding.userAvatar.setImageResource( resourceID );
-
-        }
-        if(gender.equals( "Male" )){
-
-            int resourceID = getResources().getIdentifier(
-                    male, "drawable",
-                    getActivity() .getPackageName());
-
-            binding.userAvatar.setImageResource( resourceID );
-        }
-
-
-        int resourceID = getResources().getIdentifier(
-                userDetails.get(SessionManager.KEY_GENDER), "drawable",
-                getActivity() .getPackageName());
-*/
 
         SessionManager sessionManager = new SessionManager( requireContext(), SessionManager.SESSION_USERSESSION );
         HashMap<String, String> userDetails = sessionManager.getUsersDetailFromSession();
@@ -177,8 +150,6 @@ public class ProfileFragment extends Fragment {
 
             }
         } );
-
-
 
 
 

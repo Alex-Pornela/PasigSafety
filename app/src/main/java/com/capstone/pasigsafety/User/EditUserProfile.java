@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.capstone.pasigsafety.Common.LoginSignup.Login;
 import com.capstone.pasigsafety.Databases.SessionManager;
 import com.capstone.pasigsafety.Databases.UserHelperClass;
+import com.capstone.pasigsafety.Fragments.MainHomeFragment;
 import com.capstone.pasigsafety.Fragments.UserSettings.ProfileFragment;
 import com.capstone.pasigsafety.R;
 import com.capstone.pasigsafety.databinding.ActivityEditUserProfileBinding;
@@ -247,5 +248,10 @@ public class EditUserProfile extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent( EditUserProfile.this, UserDashboard.class );
+        startActivity( intent );
+        finish();
+    }
 }

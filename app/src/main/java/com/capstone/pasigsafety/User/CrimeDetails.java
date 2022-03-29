@@ -205,15 +205,44 @@ public class CrimeDetails extends AppCompatActivity {
 
 
         String[] robbery = getResources().getStringArray( R.array.robbery_precautions );
-
-
+        String[] scam = getResources().getStringArray( R.array.scam_precautions );
+        String[] gambling = getResources().getStringArray( R.array.gambling_precautions );
+        String[] physical_injury = getResources().getStringArray( R.array.physical_injury_precautions);
+        String[] theft = getResources().getStringArray( R.array.theft_precautions );
+        String[] carnapping = getResources().getStringArray( R.array.carnapping_precautions );
 
         if(crimeType.equals( "Robbery" )){
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.custom_list_view, android.R.id.text1, robbery);
 
             binding.precautions.setDividerHeight( 0 );
             binding.precautions.setAdapter(adapter);
+        }else if(crimeType.equals( "Scam" )){
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.custom_list_view, android.R.id.text1, scam);
+
+            binding.precautions.setDividerHeight( 0 );
+            binding.precautions.setAdapter(adapter);
+        }else if(crimeType.equals( "Theft" )){
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.custom_list_view, android.R.id.text1, theft);
+
+            binding.precautions.setDividerHeight( 0 );
+            binding.precautions.setAdapter(adapter);
+        }else if(crimeType.equals( "Gambling" )){
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.custom_list_view, android.R.id.text1, gambling);
+
+            binding.precautions.setDividerHeight( 0 );
+            binding.precautions.setAdapter(adapter);
+        }else if(crimeType.equals( "CarNapping" )){
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.custom_list_view, android.R.id.text1, carnapping);
+
+            binding.precautions.setDividerHeight( 0 );
+            binding.precautions.setAdapter(adapter);
+        }else if(crimeType.equals( "Physical Injury" )){
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.custom_list_view, android.R.id.text1, scam);
+
+            binding.precautions.setDividerHeight( 0 );
+            binding.precautions.setAdapter(adapter);
         }
+
 
         /*ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(this, R.array.robbery_precautions, android.R.layout.activity_list_item);
         binding.precautions.setAdapter(aa);*/

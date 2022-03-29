@@ -959,6 +959,10 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
             double latitude = locationResult.getLastLocation().getLatitude();
             double longitude = locationResult.getLastLocation().getLongitude();
 
+            LatLng latLng = new LatLng( latitude,longitude );
+
+
+
             geoFire.setLocation( "myLocation", new GeoLocation( latitude, longitude ) );
 
 
@@ -1192,6 +1196,8 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
 
 
     }
+
+
 
 
 }

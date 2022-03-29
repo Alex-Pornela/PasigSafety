@@ -132,5 +132,40 @@
 
     </string-array>
 
+    <string-array name="robbery_precautions">
+        <item>Avoid walking on the streets late at night.</item>
+        <item> Don\'t look like an easy target. </item>
+        <item>Keep an eye out! Keep your valuables out of sight of others.</item>
+        <item>Robbers could be anywhere!</item>
+    </string-array>
+
+    <string-array name="gambling_precautions">
+        <item>Gambling incidents have occurred here, so be on the lookout!</item>
+        <item> Be financially secure and don\'t consider gambling a way to make money! </item>
+    </string-array>
+
+    <string-array name="physical_injury_precautions">
+        <item>In this location, a physical injury occurred. Keep vigilance.</item>
+        <item> When possible, walk on the sidewalks.  </item>
+        <item> Stay close to the curb, avoiding doorways, bushes, and other possible hiding places for an assailant. </item>
+    </string-array>
+
+    <string-array name="scam_precautions">
+        <item>Scammers have been reported in this area.</item>
+        <item> Don\'t talk to strangers. </item>
+        <item> When you detect or hear something suspicious, proceed with caution.. </item>
+    </string-array>
+
+    <string-array name="theft_precautions">
+        <item>Thieves can be found anywhere now!</item>
+        <item>  Keep valuables, such as purses and wallets, cell phones, electronics, and jewelry, out of vision, and never leave valuables unattended. </item>
+    </string-array>
+
+    <string-array name="carnapping_precautions">
+        <item>Carnappers could be located anywhere! If you have a vehicle or a car, always lock the doors and windows while parked.</item>
+        <item> Always park in a secure and safe location. </item>
+        <item> To avoid temptation, avoid leaving valuables inside the vehicle. </item>
+    </string-array>
+
 
 </resources>

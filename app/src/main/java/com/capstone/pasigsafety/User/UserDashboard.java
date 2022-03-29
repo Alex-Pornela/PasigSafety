@@ -1,11 +1,19 @@
 package com.capstone.pasigsafety.User;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.capstone.pasigsafety.Fragments.CrimeSpotFragment;
 import com.capstone.pasigsafety.Fragments.MainHomeFragment;
@@ -48,13 +56,13 @@ public class UserDashboard extends AppCompatActivity {
                         fragment = new MainHomeFragment();
                         break;
                     case R.id.bottom_nav_crime_spot:
-                        fragment = new CrimeSpotFragment();
-                        break;
-                    case R.id.bottom_nav_police_contact:
                         fragment = new PoliceContactFragment();
                         break;
-                    case R.id.bottom_nav_profile:
+                    case R.id.bottom_nav_police_contact:
                         fragment = new ProfileFragment();
+                        break;
+                    case R.id.bottom_nav_profile:
+                        fragment = new CrimeSpotFragment();
                         break;
                 }
                 assert fragment != null;
@@ -63,6 +71,43 @@ public class UserDashboard extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed () {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserDashboard.this, R.style.AlertDialogTheme);
+        View view = LayoutInflater.from(UserDashboard.this).inflate(
+                R.layout.exit_dialog_layout,
+                (ConstraintLayout)findViewById(R.id.layoutDialogContainer)
+        );
+        builder.setView(view);
+        ((TextView) view.findViewById(R.id.textTitle)).setText("Pasig Safety");
+        ((TextView) view.findViewById(R.id.textMessage)).setText("Do you want to exit?");
+        ((Button) view.findViewById(R.id.buttonYes)).setText("Yes");
+        ((Button) view.findViewById(R.id.buttonNo)).setText("No");
+        ((ImageView) view.findViewById(R.id.imageIcon)).setImageResource(R.drawable.warning);
+
+        final AlertDialog alertDialog = builder.create();
+
+        view.findViewById(R.id.buttonYes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        view.findViewById(R.id.buttonNo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+        if (alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
     }
 
 }

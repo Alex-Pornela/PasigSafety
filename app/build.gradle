@@ -130,11 +130,13 @@ dependencies{
 
     // Add this to your app/build.gradle
     implementation 'com.firebase:geofire-android-common:3.1.0'
-
     implementation 'com.firebase:geofire-android:3.1.0'
 
     //For drawing route
     implementation 'com.github.jd-alexander:library:1.1.0'
+
+    //For about us page
+    implementation 'io.github.medyo:android-about-page:2.0.0'
 
 
 

@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PasigSafety">
         <activity
+            android:name=".User.About"
+            android:exported="false" />
+        <activity
             android:name=".User.CrimeDetails"
             android:exported="false" />
         <activity
