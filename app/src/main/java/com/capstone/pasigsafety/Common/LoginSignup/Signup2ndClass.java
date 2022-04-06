@@ -61,11 +61,12 @@ public class Signup2ndClass extends AppCompatActivity {
         selectedGender = findViewById( radioGroup.getCheckedRadioButtonId() );
         String _gender = selectedGender.getText().toString();
 
+        int selectedMonth =  datePicker.getMonth()+1;
+
         int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth();
         int year = datePicker.getYear();
 
-        String _date = day+"/"+month+"/"+year;
+        String _date = day+"/"+ selectedMonth +"/"+year;
 
 
         //Get all valued passed from previous screen using Intent

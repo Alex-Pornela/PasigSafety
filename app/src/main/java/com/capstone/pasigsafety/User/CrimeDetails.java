@@ -163,19 +163,19 @@ public class CrimeDetails extends AppCompatActivity {
 
 
                 //for crime rate
-                if(numbers <=5){
+                if(numbers <=12){
                     //25% safe
                     startAnimationCounter( 0,25 );
                 }
-                else if (numbers>5 && numbers<=10){
+                else if (numbers>12 && numbers<=25){
                     //50% Moderately Safe
                     startAnimationCounter( 0,50 );
                 }
-                else if (numbers>10 && numbers<=15){
+                else if (numbers>25 && numbers<=38){
                     //75% Dangerous
                     startAnimationCounter( 0,75 );
                 }
-                else if (numbers>15 && numbers<=20){
+                else if (numbers>38 && numbers<=50){
                     //100% Extremely
                     startAnimationCounter( 0,100 );
                 }
@@ -271,19 +271,19 @@ public class CrimeDetails extends AppCompatActivity {
         String dangerous = "Dangerous";
         String extreme = "Extremely Dangerous";
 
-        if(numbers<=5){
+        if(numbers<=12){
             //25% safe
             binding.safetyRange.setText( safe );
         }
-        else if(numbers<=10){
+        else if(numbers>12 && numbers<=25){
             //50%
             binding.safetyRange.setText( moderate  );
         }
-        else if(numbers>10 && numbers<=15){
+        else if(numbers>25 && numbers<=38){
             //75%
             binding.safetyRange.setText(dangerous );
         }
-        else if(numbers>15 && numbers<=20){
+        else if(numbers>38 && numbers<=50){
             //100%
             binding.safetyRange.setText(extreme);
         }

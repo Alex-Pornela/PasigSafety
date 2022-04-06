@@ -93,6 +93,22 @@
     <string name="secondLinePrecautions">Be aware of your surroundings and check nearest police station if needed.</string>
 
 
+    <!--About Us-->
+    <string name="first_paragraph">You don\'t have to be anxious about your safety; this application can help you overcome your wariness about going somewhere!</string>
+    <string name="second_paragraph">Pasig Safety Application has a lot of features! When you log in, the application will request GPS permission. To ensure that the application knows your current location, you must click Allow. Then simply click the search button to quickly find your desired location!</string>
+    <string name="third_paragraph">You will be taken directly to the main dashboard. A blue circle with a radius of 500m represents your current location on the map. Any crime within that range will be displayed. When you click the crime marker, it will show you the crime rates and how safe your location is.</string>
+    <string name="fourth_paragraph">This application also displays marked crime spots and shows the user\'s nearest police contact location.</string>
+    <string name="fifth_paragraph">Crime spots can be viewed by clicking the "Crime Spot" button.</string>
+    <string name="sixth_paragraph">New crime spots with types of crime and user experience can be added by long pressing and holding on a spot on the map.</string>
+    <string name="seventh_paragraph">The "Police Contact" button must be clicked to find the nearest police contact location. This app also shows the path of a police contact location from a given location.</string>
+
+    <!--Developer-->
+    <string name="carl">Carl Jeremiah Dela Cruz</string>
+    <string name="chie">Richie Grace Factor</string>
+    <string name="thomas">Thomas Allyson Jumawan</string>
+    <string name="alex">Alex Pornela</string>
+
+
     <!--For Crime Type Array-->
     <string-array name="crime_type">
         <item>Robbery</item>
@@ -115,12 +131,12 @@
 
     <!--For Crime Description Item-->
     <string-array name="crime_desc">
-        <item>Taking property from a person by force, threat of force, or fear, in public or private places</item>
-        <item>Robbery by motorcycle, bicycle or similar</item>
-        <item>Theft of a car, truck, motorcycle, or any motor vehicle</item>
-        <item>Hijacking in banks or similar</item>
-        <item>Action parking watchers in public lots (extortion)</item>
-        <item>Robbery-murder</item>
+        <item>Taking or attempting to take anything of value by force, threat of force, or by putting the victim in fear.</item>
+        <item>Any fraudulent business or scheme that takes money or other goods from an unsuspecting person.</item>
+        <item>Taking of another person\'s property or services without that person\'s permission or consent with the intent to deprive the rightful owner of it</item>
+        <item>Impairment of one’s physical condition or substantial pain.</item>
+        <item>Accepting, recording, or registering bets, or carrying on a policy game or any other lottery, or playing any game of chance, for money or other thing of value.</item>
+        <item>Taking, with intent to gain, of a motor vehicle belonging to another without the latter\’s consent, or by means of violence against or intimidation of persons, or by using force upon things.</item>
 
     </string-array>
 
@@ -166,6 +182,8 @@
         <item> Always park in a secure and safe location. </item>
         <item> To avoid temptation, avoid leaving valuables inside the vehicle. </item>
     </string-array>
+
+
 
 
 </resources>

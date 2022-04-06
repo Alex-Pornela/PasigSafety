@@ -62,13 +62,7 @@ public class ProfileFragment extends Fragment {
         } );
 
 
-        binding.aboutUs.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent( requireActivity(), About.class));
-                requireActivity().finish();
-            }
-        } );
+
 
 
 

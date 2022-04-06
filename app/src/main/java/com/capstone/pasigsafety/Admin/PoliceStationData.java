@@ -7,17 +7,19 @@ public class PoliceStationData {
     private Double latitude;
     private Double longitude;
     private String address;
+    private String healthIcon;
 
     public PoliceStationData() {
 
     }
 
-    public PoliceStationData(String name, String number, Double latitude, Double longitude, String address) {
+    public PoliceStationData(String name, String number, Double latitude, Double longitude, String address,String healthIcon) {
         this.name = name;
         this.number = number;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+        this.healthIcon = healthIcon;
     }
 
     public String getName() {
@@ -58,5 +60,13 @@ public class PoliceStationData {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getHealthIcon() {
+        return healthIcon;
+    }
+
+    public void setHealthIcon(String healthIcon) {
+        this.healthIcon = healthIcon;
     }
 }

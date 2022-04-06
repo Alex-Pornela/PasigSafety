@@ -339,8 +339,9 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
                                 String number = data.getNumber();
                                 double latitude = data.getLatitude();
                                 double longitude = data.getLongitude();
+                                String healthCenterIcon = data.getHealthIcon();
 
-                                PoliceStationData details = new PoliceStationData(name,number,latitude,longitude,address);
+                                PoliceStationData details = new PoliceStationData(name,number,latitude,longitude,address,healthCenterIcon);
 
                                 GeoQuery geoQuery = geoFire.queryAtLocation( new GeoLocation( latitude,longitude ),2 );
 
@@ -356,23 +357,33 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
                                         if (isAttachedToActivity()){
 
-                                            LatLng latLng = new LatLng(latitude,longitude);
 
-                                            Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)
-                                                    .icon(BitmapDescriptorFactory.fromResource( R.drawable.police_marker )));
-                                            markers.put(key,marker);
+
+                                            //get string icon using filename
+                                            int resourceID = getResources().getIdentifier(
+                                                    data.getHealthIcon(), "drawable",
+                                                    getActivity().getPackageName() );
+
+                                            //bitmapDescriptor for marker using filename
+                                            BitmapDescriptor police_icon = BitmapDescriptorFactory.fromResource( resourceID );
+
+                                            LatLng latLng = new LatLng( latitude, longitude );
+
+
+                                            Marker marker = mGoogleMap.addMarker( new MarkerOptions().position( latLng )
+                                                    .icon( police_icon ) );
+                                            markers.put( key, marker );
+
+
                                             //detailMarkerMap.put(marker,detail);
-                                            marker.setTag(details);
+                                            marker.setTag( details );
+
 
                                         }
 
 
                                         if(mGoogleMap != null){
 
-                                            //clearPolyline();
-
-
-                                            //Toast.makeText( requireContext(), markers.size() + " crime incident found nearby", Toast.LENGTH_SHORT ).show();
                                             mGoogleMap.setInfoWindowAdapter( new GoogleMap.InfoWindowAdapter() {
 
 
@@ -402,6 +413,7 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
                                                     TextView stationName = view.findViewById( R.id.station_name );
                                                     TextView stationDistance = view.findViewById( R.id.station_distance );
+                                                    ImageView healthIcon =  view.findViewById( R.id.crime_ic );
 
 
                                                     PoliceStationData adata = (PoliceStationData) marker.getTag();
@@ -436,13 +448,12 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
                                                             .build();
                                                     routing.execute();
 
-
-                                                    /*Polyline line = mGoogleMap.addPolyline(new PolylineOptions()
-                                                            .add(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), new LatLng(stationLocation.getLatitude(), stationLocation.getLongitude()))
-                                                            .width(5)
-                                                            .color(Color.RED));*/
-
-                                                    //gMap.addPolyline(polylineOptions);
+                                                    if(adata.getHealthIcon().equals( "health_icon" )){
+                                                        int resourceID = getResources().getIdentifier(
+                                                                "health_icon_marker", "drawable",
+                                                                getActivity().getPackageName() );
+                                                        healthIcon.setImageResource( resourceID );
+                                                    }
 
 
 
