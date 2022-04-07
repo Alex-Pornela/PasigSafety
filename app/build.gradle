@@ -138,6 +138,9 @@ dependencies{
     //For about us page
     implementation 'io.github.medyo:android-about-page:2.0.0'
 
+    //Cardview
+    implementation "androidx.cardview:cardview:1.0.0"
+
 
 
 

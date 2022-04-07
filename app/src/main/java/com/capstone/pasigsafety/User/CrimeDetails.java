@@ -133,9 +133,7 @@ public class CrimeDetails extends AppCompatActivity {
         getCrimeRate(brgy,crimeType);
 
 
-
     }
-
 
 
     private void getCrimeRate(String brgy, String crimeType) {

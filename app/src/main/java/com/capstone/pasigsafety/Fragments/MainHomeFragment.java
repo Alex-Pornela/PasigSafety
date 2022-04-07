@@ -258,6 +258,9 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
 
                         if (snapshot.child( "userRoles" ).getValue( String.class ).equals( "user" )) {
 
+
+                            binding.addMarker.setVisibility(View.GONE);
+/*
                             dialog = new Dialog( requireContext() );
 
                             dialog.setContentView( R.layout.not_authorize_dialog );
@@ -273,7 +276,7 @@ public class MainHomeFragment extends Fragment implements OnMapReadyCallback, Go
                             } );
 
 
-                            dialog.show();
+                            dialog.show();*/
                         } else {
 
                             dialog = new Dialog( requireContext() );

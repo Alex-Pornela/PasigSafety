@@ -15,6 +15,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,6 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -226,6 +228,39 @@ public class PoliceContactFragment extends Fragment implements OnMapReadyCallbac
 
         // user location button
         binding.currentLocation.setOnClickListener( searchLocation -> checkGps() );
+
+
+        binding.hotlines.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog( requireContext() );
+
+                dialog.setContentView( R.layout.hotline_numbers_layout );
+                dialog.getWindow().setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
+
+                ImageView closeDialog = dialog.findViewById( R.id.dialog_close );
+               /* Button okDialogBtn = dialog.findViewById( R.id.dialog_ok_btn );*/
+
+                closeDialog.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                } );
+
+             /*   okDialogBtn.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                } );*/
+
+
+                dialog.show();
+
+            }
+
+        } );
 
 
 
